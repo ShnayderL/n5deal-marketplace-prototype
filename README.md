@@ -87,6 +87,15 @@ npm test
 
 Covers smart-query parsing, match scoring, and asset draft validation.
 
+## Live demo
+
+- **Temporary Vercel deployment:** https://temporary-swift-saffron-gppsa4v.vercel.app  
+  Claim to keep it permanent: https://vercel.com/claim-deployment?code=ba90db03-7ffc-430b-b798-e0cbf0cc6651
+- **Source:** https://github.com/ShnayderL/n5deal-marketplace-prototype  
+- **PR with full implementation:** https://github.com/ShnayderL/n5deal-marketplace-prototype/pull/1
+
+> The anonymous Vercel preview expires unless claimed. For a durable production URL, claim the deployment or import the GitHub repo into your Vercel account (`AUTH_SECRET` required).
+
 ## Deploy
 
 ```bash
