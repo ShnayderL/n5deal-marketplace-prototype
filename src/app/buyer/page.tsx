@@ -1,17 +1,13 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { AssetCard } from "@/components/cards";
 import { PageShell } from "@/components/ui";
 import { scoreAssetForBuyer } from "@/lib/ai";
-import { getSession } from "@/lib/auth";
+import { guardSession } from "@/lib/guards";
 import { store } from "@/lib/store";
 import { formatMoney } from "@/lib/utils";
 
 export default async function BuyerDashboardPage() {
-  const session = await getSession();
-  if (!session) redirect("/login");
-  if (session.role !== "BUYER") redirect("/");
-
+  const session = await guardSession(["BUYER"]);
   const buyer = store.getUserById(session.id);
   const assets = store.listAssets({ status: "PUBLISHED" });
   const matched = assets

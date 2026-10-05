@@ -3,6 +3,7 @@ import type { Role } from "@/lib/types";
 import { logoutAction } from "@/app/actions";
 import type { SessionUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/logo";
 
 const linksByRole: Record<Role, { href: string; label: string }[]> = {
   BUYER: [
@@ -33,36 +34,38 @@ export function SiteHeader({
   pathname?: string;
 }) {
   const links = user ? linksByRole[user.role] : [];
+  const isListings = pathname === "/assets" || pathname?.startsWith("/assets/");
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[rgba(7,17,31,0.78)] backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
-        <Link href="/" className="font-display text-xl font-bold tracking-tight">
-          N5<span className="text-[var(--accent)]">Deal</span>
-          <span className="ml-2 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-            Prototype
-          </span>
-        </Link>
+    <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/90 shadow-sm backdrop-blur-md">
+      <div className="mx-auto flex min-h-[78px] max-w-6xl items-center justify-between gap-3 px-4 py-4 md:px-6">
+        <Logo size="header" />
 
-        <nav className="hidden items-center gap-1 md:flex">
-          {!user && (
+        <nav className="hidden items-center gap-1 lg:flex">
+          {!user ? (
             <>
-              <Link className="rounded-full px-3 py-2 text-sm text-[var(--muted)] hover:text-white" href="/assets">
-                Browse assets
+              <Link className="nav-link" href="/login?role=buyer">
+                Buyer
               </Link>
-              <Link className="rounded-full px-3 py-2 text-sm text-[var(--muted)] hover:text-white" href="/login">
-                Sign in
+              <Link className="nav-link" href="/login?role=seller">
+                Seller
+              </Link>
+              <Link
+                href="/assets"
+                className={cn("nav-link", isListings && "nav-link-active")}
+              >
+                All Listings
+              </Link>
+              <Link className="nav-link" href="/assets?category=License">
+                Incorporation License
               </Link>
             </>
-          )}
+          ) : null}
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={cn(
-                "rounded-full px-3 py-2 text-sm text-[var(--muted)] hover:text-white",
-                pathname === link.href && "bg-white/5 text-white",
-              )}
+              className={cn("nav-link", pathname === link.href && "nav-link-active")}
             >
               {link.label}
             </Link>
@@ -70,22 +73,27 @@ export function SiteHeader({
         </nav>
 
         <div className="flex items-center gap-2">
-          {user ? (
+          {!user ? (
+            <>
+              <Link href="/assets" className="btn btn-ghost hidden !px-3 !py-1.5 text-sm sm:inline-flex">
+                Free Valuation
+              </Link>
+              <Link href="/login" className="btn btn-primary !px-3.5 !py-1.5 text-sm">
+                Start now
+              </Link>
+            </>
+          ) : (
             <>
               <div className="hidden text-right sm:block">
                 <div className="text-sm font-semibold">{user.name}</div>
                 <div className="text-xs uppercase tracking-wide text-[var(--muted)]">{user.role}</div>
               </div>
               <form action={logoutAction}>
-                <button className="btn btn-ghost" type="submit">
+                <button className="btn btn-ghost text-sm" type="submit">
                   Sign out
                 </button>
               </form>
             </>
-          ) : (
-            <Link href="/login" className="btn btn-primary">
-              Enter marketplace
-            </Link>
           )}
         </div>
       </div>
@@ -108,7 +116,7 @@ export function PageShell({
     <div className="mx-auto w-full max-w-6xl px-4 py-8 md:px-6 md:py-10">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="fade-up">
-          <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{title}</h1>
+          <h1 className="font-display text-3xl font-bold tracking-tight text-[var(--text)] md:text-4xl">{title}</h1>
           {subtitle ? <p className="mt-2 max-w-2xl text-[var(--muted)]">{subtitle}</p> : null}
         </div>
         {actions ? <div className="fade-up-delay flex flex-wrap gap-2">{actions}</div> : null}

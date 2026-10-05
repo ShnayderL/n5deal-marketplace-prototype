@@ -1,17 +1,13 @@
-import { redirect } from "next/navigation";
 import { removeParticipantAction, setAssetStatusAction, setUserStatusAction } from "@/app/actions";
 import { PageShell } from "@/components/ui";
-import { getSession } from "@/lib/auth";
+import { guardSession } from "@/lib/guards";
 import { store } from "@/lib/store";
 import { formatMoney } from "@/lib/utils";
 
 type SearchParams = Promise<{ q?: string }>;
 
 export default async function ManagerPage({ searchParams }: { searchParams: SearchParams }) {
-  const session = await getSession();
-  if (!session) redirect("/login");
-  if (session.role !== "MANAGER") redirect("/");
-
+  await guardSession(["MANAGER"]);
   const params = await searchParams;
   const q = params.q?.trim();
 

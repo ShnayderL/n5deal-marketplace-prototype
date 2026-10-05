@@ -1,6 +1,10 @@
+import Image from "next/image";
+import Link from "next/link";
 import { AssetCard } from "@/components/cards";
 import { AssetFilters } from "@/components/forms";
+import { Logo } from "@/components/logo";
 import { EmptyState, PageShell } from "@/components/ui";
+import { IMAGES } from "@/lib/images";
 import { parseSmartQuery, scoreAssetForBuyer } from "@/lib/ai";
 import { getSession } from "@/lib/auth";
 import { CATEGORIES, JURISDICTIONS } from "@/lib/constants";
@@ -57,10 +61,27 @@ export default async function AssetsPage({ searchParams }: { searchParams: Searc
   }
 
   return (
-    <PageShell
-      title="All listings"
-      subtitle="Browse regulated fintech assets, licenses, and digital financial opportunities. Signed-in buyers see AI match scores against their profile."
-    >
+    <>
+      <div className="border-b border-[var(--border)] bg-white">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 md:flex-row md:items-center md:justify-between md:px-6">
+          <div>
+            <p className="mb-2 text-xs text-[var(--muted)]">
+              <Link href="/" className="hover:text-[var(--accent-2)]">
+                N5deal
+              </Link>{" "}
+              › All Listings
+            </p>
+            <Logo size="lg" />
+          </div>
+          <div className="relative h-28 w-full overflow-hidden rounded-2xl md:h-24 md:max-w-md">
+            <Image src={IMAGES.office} alt="" fill className="object-cover" sizes="400px" />
+          </div>
+        </div>
+      </div>
+      <PageShell
+        title="All listings"
+        subtitle="Browse regulated fintech assets, licenses, and digital financial opportunities. Signed-in buyers see AI match scores against their profile."
+      >
       <div className="space-y-6">
         <AssetFilters
           categories={[...CATEGORIES]}
@@ -74,7 +95,7 @@ export default async function AssetsPage({ searchParams }: { searchParams: Searc
         />
 
         {smart ? (
-          <div className="rounded-2xl border border-[var(--border)] bg-[rgba(30,200,178,0.06)] px-4 py-3 text-sm text-[var(--muted)]">
+          <div className="rounded-2xl border border-[var(--border)] bg-teal-50 px-4 py-3 text-sm text-[var(--muted)]">
             AI interpreted:{" "}
             {[
               smart.categories.length ? `categories ${smart.categories.join(", ")}` : null,
@@ -93,13 +114,16 @@ export default async function AssetsPage({ searchParams }: { searchParams: Searc
             body="Try clearing filters or broadening the AI query (e.g. “payments EU under €5m”)."
           />
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {enriched.map((asset) => (
-              <AssetCard key={asset.id} asset={asset} />
+          <div className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {enriched.map((asset, i) => (
+              <div key={asset.id} className="h-full">
+                <AssetCard asset={asset} imageIndex={i} />
+              </div>
             ))}
           </div>
         )}
       </div>
     </PageShell>
+    </>
   );
 }

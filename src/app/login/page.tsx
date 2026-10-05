@@ -5,7 +5,7 @@ export default function LoginPage() {
   return (
     <PageShell
       title="Access the marketplace"
-      subtitle="Use demo accounts to evaluate Buyer, Seller, and Platform Manager flows. State persists in SQLite across refresh."
+      subtitle="Sign in to manage mandates, listings, and deal conversations — or explore instantly with a role workspace."
     >
       <LoginForm />
     </PageShell>

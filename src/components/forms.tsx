@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { demoLoginAction, loginAction } from "@/app/actions";
-import { DEMO_ACCOUNTS, DEMO_PASSWORD } from "@/lib/constants";
+import { DEMO_ACCOUNTS } from "@/lib/constants";
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
@@ -21,38 +21,66 @@ export function LoginForm() {
       >
         <h2 className="font-display text-2xl font-semibold">Sign in</h2>
         <p className="mt-2 text-sm text-[var(--muted)]">
-          Demo password for all seeded accounts: <code>{DEMO_PASSWORD}</code>
+          Enter your credentials to access the marketplace.
         </p>
         <div className="mt-6 space-y-4">
           <div>
             <label className="label" htmlFor="email">
               Email
             </label>
-            <input className="input" id="email" name="email" type="email" required defaultValue="buyer@n5deal.demo" />
+            <input
+              className="input"
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="username"
+              placeholder="you@company.com"
+            />
           </div>
           <div>
             <label className="label" htmlFor="password">
               Password
             </label>
-            <input className="input" id="password" name="password" type="password" required defaultValue={DEMO_PASSWORD} />
+            <input
+              className="input"
+              id="password"
+              name="password"
+              type="password"
+              required
+              autoComplete="current-password"
+              placeholder="••••••••"
+            />
           </div>
           {error ? <p className="text-sm text-[var(--danger)]">{error}</p> : null}
           <button className="btn btn-primary w-full" disabled={pending} type="submit">
-            {pending ? "Signing in…" : "Continue"}
+            {pending ? "Signing in…" : "Sign in"}
           </button>
+          <p className="text-center text-sm text-[var(--muted)]">
+            New to N5Deal?{" "}
+            <button
+              type="button"
+              className="font-semibold text-[var(--accent-2)] underline-offset-2 transition hover:underline"
+              onClick={() =>
+                setError("Self-serve sign-up is invite-only. Use a demo role on the right to explore the product.")
+              }
+            >
+              Sign up
+            </button>
+          </p>
         </div>
       </form>
 
       <div className="surface p-6">
-        <h2 className="font-display text-2xl font-semibold">One-click demo roles</h2>
+        <h2 className="font-display text-2xl font-semibold">Explore as a role</h2>
         <p className="mt-2 text-sm text-[var(--muted)]">
-          Jump straight into Buyer, Seller, or Platform Manager flows.
+          Instantly preview Buyer, Seller, or Platform Manager workspaces.
         </p>
         <div className="mt-5 space-y-3">
           {DEMO_ACCOUNTS.map((account) => (
             <button
               key={account.email}
-              className="w-full rounded-2xl border border-[var(--border)] bg-white/[0.02] p-4 text-left transition hover:border-[var(--border-strong)]"
+              className="w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] p-4 text-left transition hover:border-[var(--accent-2)]/40 hover:bg-white"
               disabled={pending}
               type="button"
               onClick={() => {
