@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# N5Deal Marketplace Prototype
 
-## Getting Started
+A working full-stack marketplace prototype for **M&A opportunities and financial assets**, inspired by [N5Deal](https://n5deal.com/all-listing).
 
-First, run the development server:
+Built as a technical selection assignment: focused product scope, persistent data, three roles, and a deployable Next.js app — not a production clone.
+
+## Quick start
 
 ```bash
+npm install
+cp .env.example .env
+npm run db:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Demo accounts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Password for all seeded users: `demo1234`
 
-## Learn More
+| Role | Email | One-click on `/login` |
+|------|-------|------------------------|
+| Buyer | `buyer@n5deal.demo` | Elena Voss |
+| Seller | `seller@n5deal.demo` | Viktor Radek |
+| Platform Manager | `manager@n5deal.demo` | Alex Morgan |
 
-To learn more about Next.js, take a look at the following resources:
+Additional buyers/sellers are seeded for richer browse/filter demos.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## What you can evaluate
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Buyer
+- Maintain acquisition mandate (categories, jurisdictions, budget, interests)
+- Browse / filter / AI-search assets
+- See AI match scores against their profile
+- Contact sellers about a listing
 
-## Deploy on Vercel
+### Seller
+- Publish assets (with AI validation hints)
+- Browse / filter / AI-search buyers
+- See suggested buyers ranked against inventory
+- Contact buyers
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Platform Manager
+- Search buyers, sellers, and assets
+- Suspend / reinstate participants
+- Remove participants
+- Suspend or republish assets
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Architecture & key decisions
+
+| Decision | Why |
+|----------|-----|
+| **Next.js App Router + TypeScript** | Required stack; Server Components for read-heavy marketplace pages, Server Actions for mutations |
+| **JSON file store (`data/store.json`)** | Real persistent data model without external DB credentials; works locally and on Vercel (copied to `/tmp` at runtime). Easy to inspect and reset |
+| **Cookie JWT sessions (`jose`)** | Lightweight auth suitable for a demo; suspended users lose access on next request |
+| **Role-gated routes + action checks** | UX shortcuts in nav, hard checks in Server Actions |
+| **Heuristic AI matching / smart filters** | Deterministic, no API key, easy to demo. Scores category, jurisdiction, budget fit, and interest keywords. NL query parser extracts filters like “EMI in Lithuania under €3m” |
+| **Dark fintech visual language** | Aligned with N5Deal’s professional M&A tone (navy surfaces, teal accent, Syne + Manrope) without a 1:1 copy |
+
+### Data model
+
+- `User` (BUYER / SELLER / MANAGER) + status
+- `BuyerProfile` — mandate / budget / preferences
+- `SellerProfile` — operator bio
+- `Asset` — structured listing (category, jurisdiction, license, price, readiness, status)
+- `Message` — buyer↔seller contact tied optionally to an asset
+
+## Assumptions
+
+1. Contact = in-app messaging (not email/SMS). Enough to prove the flow.
+2. “Remove participant” is a hard delete for demo clarity; production would soft-delete + audit log.
+3. Public asset browsing is allowed; contacting requires sign-in as the correct role.
+4. AI features are rule-based (explainable scores), not LLM calls — reliability over novelty for a time-boxed assignment.
+5. On Vercel, mutations persist for the life of a warm serverless instance; cold starts reload from the seeded `data/store.json`. Locally, writes persist to disk across refresh and restarts.
+
+## AI tools used
+
+- **Cursor / Composer** — scaffolding, iterative implementation, refactoring
+- Manual product decisions on scope, UX, and architecture remained human-owned
+
+## Tests
+
+```bash
+npm test
+```
+
+Covers smart-query parsing, match scoring, and asset draft validation.
+
+## Deploy
+
+```bash
+npm run build
+npx vercel --prod
+```
+
+Set `AUTH_SECRET` in the host environment.
+
+## With more time I would
+
+- Move to Postgres (Neon/Supabase) for durable multi-instance persistence
+- Add NDA / deal-room stages and document upload
+- Real LLM assist for mandate drafting and listing copy (with human confirmation)
+- Playwright e2e for the three role journeys
+- i18n (EN/UK) and stronger verification workflows
+- Proper audit log for manager actions
+
+## Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `npm run dev` | Seed store (if needed) + local development |
+| `npm run build` | Seed store + production build |
+| `npm run db:reset` | Force-reseed demo data |
+| `npm test` | Unit tests |
