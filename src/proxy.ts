@@ -55,12 +55,6 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  if (pathname === "/login" && session) {
-    const dest =
-      session.role === "MANAGER" ? "/manager" : session.role === "SELLER" ? "/seller" : "/buyer";
-    return NextResponse.redirect(new URL(dest, request.url));
-  }
-
   const response = NextResponse.next();
   response.headers.set("x-pathname", pathname);
   response.headers.set("x-content-type-options", "nosniff");
