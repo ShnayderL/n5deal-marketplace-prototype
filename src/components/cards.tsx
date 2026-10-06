@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Check, Lock, Minus, Timer, X } from "lucide-react";
+import { Flag } from "@/components/flag";
 import { KyfRing } from "@/components/kyf-panel";
 import { getCocKit } from "@/lib/coc";
 import { jurisdictionCode } from "@/lib/constants";
@@ -52,7 +53,8 @@ export function AssetCard({ asset }: AssetCardProps) {
       <div className="deal-sheet-head flex items-start justify-between gap-3 p-5">
         <div className="min-w-0">
           <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-white/60">
-            <span className="rounded-md bg-white/10 px-1.5 py-0.5 font-mono font-bold tracking-normal text-white">
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-white/10 py-0.5 pl-1 pr-1.5 font-mono font-bold tracking-normal text-white">
+              <Flag jurisdiction={asset.jurisdiction} size={18} />
               {jurisdictionCode(asset.jurisdiction)}
             </span>
             <span className="truncate">{asset.regulator || kit.regulator}</span>

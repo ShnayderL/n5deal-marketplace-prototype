@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -16,10 +17,12 @@ import {
   UserCheck,
 } from "lucide-react";
 import { AssetCard } from "@/components/cards";
+import { Flag } from "@/components/flag";
 import { InstantShortlist } from "@/components/instant-shortlist";
+import { PartnersSection } from "@/components/partners";
 import { getSession } from "@/lib/auth";
 import { getCocKit } from "@/lib/coc";
-import { jurisdictionCode } from "@/lib/constants";
+import { IMAGES } from "@/lib/images";
 import { computeKyfReport } from "@/lib/kyf";
 import { buildShortlist, DEFAULT_SHORTLIST_INPUT } from "@/lib/shortlist";
 import { store } from "@/lib/store";
@@ -39,6 +42,8 @@ const STEPS = [
   { icon: FileCheck, title: "CoC kit", body: "Jurisdiction checklist: UBO chart, fit & proper, banking re-KYC.", tag: "Guided" },
   { icon: Handshake, title: "LOI & exclusivity", body: "Seller grants exclusivity once critical CoC items are complete.", tag: "Weeks" },
 ];
+
+const LIVE_MARKETS = ["Lithuania", "Estonia", "UK", "Germany", "Spain", "UAE", "Singapore"];
 
 const FEATURED_JURISDICTIONS = ["Lithuania", "Estonia", "UK", "Germany", "Spain", "Cyprus", "UAE", "Singapore"];
 
@@ -110,7 +115,34 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6 sm:grid-cols-4">
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-2.5">
+                  {IMAGES.advisors.slice(0, 4).map((src) => (
+                    <Image
+                      key={src}
+                      src={src}
+                      alt=""
+                      width={36}
+                      height={36}
+                      className="h-9 w-9 rounded-full border-2 border-[#0a1222] object-cover"
+                    />
+                  ))}
+                </div>
+                <div className="text-xs leading-tight text-white/70">
+                  <b className="block text-sm text-white">Dedicated deal advisors</b>
+                  Avg. first reply under 2 hours
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5">
+                {LIVE_MARKETS.map((j) => (
+                  <Flag key={j} jurisdiction={j} size={22} className="shadow-[0_0_0_1px_rgba(255,255,255,0.25)]" />
+                ))}
+                <span className="ml-1.5 text-xs text-white/60">live markets</span>
+              </div>
+            </div>
+
+            <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6 sm:grid-cols-4">
               {[
                 { v: String(assets.length), l: "Pre-scored entities" },
                 { v: `${avgKyf}/100`, l: "Avg. KYF readiness" },
@@ -162,6 +194,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <PartnersSection />
 
       {/* ACQUIRE VS APPLY */}
       <section className="mx-auto max-w-6xl px-4 py-14 md:px-6">
@@ -272,6 +306,47 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* DEAL DESK */}
+      <section className="mx-auto max-w-6xl px-4 pb-14 md:px-6">
+        <div className="grid overflow-hidden rounded-[22px] border border-[var(--border)] bg-white lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="relative min-h-[320px]">
+            <Image src={IMAGES.boardroom} alt="N5Deal deal desk reviewing a change-of-control file" fill className="object-cover" sizes="(min-width: 1024px) 640px, 100vw" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a1222]/90 via-[#0a1222]/30 to-transparent" />
+            <blockquote className="absolute inset-x-0 bottom-0 p-6 text-white">
+              <p className="max-w-lg font-display text-xl font-semibold leading-snug">
+                “We had a passportable Lithuanian EMI with live IBANs under LOI in five weeks — the CoC pack was
+                ready before the first call.”
+              </p>
+              <footer className="mt-3 flex items-center gap-2 text-sm text-white/75">
+                <Flag jurisdiction="Lithuania" size={18} /> Head of M&A, European payments group
+              </footer>
+            </blockquote>
+          </div>
+          <div className="p-7">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--accent-2)]">Your deal desk</p>
+            <h3 className="mt-2 font-display text-2xl font-bold">Advisors who have run regulated deals</h3>
+            <ul className="mt-5 space-y-4">
+              {[
+                { name: "Daniel Whitmore", role: "UK & FCA change of control", j: "UK" },
+                { name: "Ieva Kazlauskė", role: "Bank of Lithuania EMI / PI", j: "Lithuania" },
+                { name: "Marco Lindqvist", role: "MiCA CASP & Estonian VASP", j: "Estonia" },
+                { name: "Sofia Almeida", role: "Banking continuity & re-KYC", j: "Spain" },
+                { name: "Omar Haddad", role: "DIFC / ADGM & MENA", j: "UAE" },
+              ].map((a, i) => (
+                <li key={a.name} className="flex items-center gap-3">
+                  <Image src={IMAGES.advisors[i]} alt={a.name} width={44} height={44} className="h-11 w-11 rounded-full object-cover" />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold">{a.name}</div>
+                    <div className="truncate text-xs text-[var(--muted)]">{a.role}</div>
+                  </div>
+                  <Flag jurisdiction={a.j} size={22} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* JURISDICTION INTELLIGENCE */}
       <section id="jurisdictions" className="scroll-mt-24 border-y border-[var(--border)] bg-white">
         <div className="mx-auto max-w-6xl px-4 py-14 md:px-6">
@@ -295,9 +370,7 @@ export default async function HomePage() {
                   className="group rounded-2xl border border-[var(--border)] p-4 transition hover:border-[var(--accent-2)]/40 hover:bg-[var(--bg-soft)]"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="rounded-md bg-[var(--nav-pill)] px-1.5 py-0.5 font-mono text-xs font-bold text-white">
-                      {jurisdictionCode(j)}
-                    </span>
+                    <Flag jurisdiction={j} size={36} className="rounded-[5px]" />
                     <span className="text-xs text-[var(--muted)]">
                       {count} {count === 1 ? "listing" : "listings"}
                     </span>
@@ -317,9 +390,16 @@ export default async function HomePage() {
       {/* TWO-SIDED VALUE */}
       <section className="mx-auto max-w-6xl px-4 py-14 md:px-6">
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="surface p-7">
-            <Building2 className="h-7 w-7 text-[var(--accent-2)]" />
-            <h3 className="mt-4 font-display text-2xl font-bold">For acquirers</h3>
+          <div className="surface overflow-hidden">
+            <div className="relative h-48">
+              <Image src={IMAGES.dealClosed} alt="Acquirer and seller closing a deal" fill className="object-cover" sizes="(min-width: 768px) 560px, 100vw" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
+              <span className="badge absolute bottom-3 left-4 bg-white/95">
+                <Building2 className="h-3.5 w-3.5" /> Buy-side
+              </span>
+            </div>
+            <div className="p-7 pt-6">
+            <h3 className="font-display text-2xl font-bold">For acquirers</h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               {[
                 "Shortlist of 2–5 entities that fit your mandate — not 300 cards to scroll",
@@ -336,10 +416,18 @@ export default async function HomePage() {
             <Link href={dashboardHref} className="btn btn-primary mt-6">
               Start a buy-side mandate <ArrowRight className="h-4 w-4" />
             </Link>
+            </div>
           </div>
-          <div className="hero-dark overflow-hidden rounded-[18px] p-7">
-            <EyeOff className="h-7 w-7 text-emerald-400" />
-            <h3 className="mt-4 font-display text-2xl font-bold text-white">For licence holders</h3>
+          <div className="hero-dark overflow-hidden rounded-[18px]">
+            <div className="relative h-48">
+              <Image src={IMAGES.advisory} alt="Licence holder in a confidential advisory meeting" fill className="object-cover opacity-80" sizes="(min-width: 768px) 560px, 100vw" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a1222] to-transparent" />
+              <span className="absolute bottom-3 left-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 px-2.5 py-1 text-xs font-semibold text-emerald-300 ring-1 ring-emerald-400/30">
+                <EyeOff className="h-3.5 w-3.5" /> Sell-side · discreet
+              </span>
+            </div>
+            <div className="p-7 pt-6">
+            <h3 className="font-display text-2xl font-bold text-white">For licence holders</h3>
             <ul className="mt-4 space-y-2.5 text-sm text-white/80">
               {[
                 "Discrete mode: identity and financials stay hidden until mutual NDA",
@@ -356,14 +444,16 @@ export default async function HomePage() {
             <Link href={session?.role === "SELLER" ? "/assets/new" : "/login?role=seller"} className="btn btn-on-dark mt-6">
               List an entity discreetly <ArrowRight className="h-4 w-4" />
             </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* FINAL CTA */}
-      <section className="hero-dark">
-        <div className="grid-lines-dark pointer-events-none absolute inset-0" />
-        <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-14 md:flex-row md:items-center md:justify-between md:px-6">
+      <section className="hero-dark overflow-hidden">
+        <Image src={IMAGES.london} alt="" fill className="object-cover opacity-30" sizes="100vw" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1222] via-[#0a1222]/85 to-[#0a1222]/40" />
+        <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-20 md:flex-row md:items-center md:justify-between md:px-6">
           <div>
             <div className="flex items-center gap-2 text-sm text-white/60">
               <Clock className="h-4 w-4" /> Every month of applying is a month competitors are live.

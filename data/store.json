@@ -1,98 +1,98 @@
 {
   "users": [
     {
-      "id": "edb6e82f-8171-40c9-8176-e6cd49367e5d",
+      "id": "95b3e473-6aaf-46af-9414-507a4de969c6",
       "email": "manager@n5deal.demo",
       "passwordHash": "80f869511e55ba6f65f8899526942e91aafd4b14b05b0bba3913a6a13a938113",
       "name": "Alex Morgan",
       "role": "MANAGER",
       "status": "ACTIVE",
       "company": "N5Deal Platform",
-      "createdAt": "2026-09-06T08:18:05.986Z",
-      "updatedAt": "2026-10-05T08:18:05.987Z"
+      "createdAt": "2026-09-06T08:37:37.928Z",
+      "updatedAt": "2026-10-05T08:37:37.928Z"
     },
     {
-      "id": "761dfb06-8896-4f9c-a653-fb2addd181e7",
+      "id": "ad5aadbd-63ae-4dd9-b1c3-580ffa68019c",
       "email": "buyer@n5deal.demo",
       "passwordHash": "80f869511e55ba6f65f8899526942e91aafd4b14b05b0bba3913a6a13a938113",
       "name": "Elena Voss",
       "role": "BUYER",
       "status": "ACTIVE",
       "company": "Nordic Capital Partners",
-      "createdAt": "2026-09-08T08:18:05.987Z",
-      "updatedAt": "2026-10-04T08:18:05.987Z"
+      "createdAt": "2026-09-08T08:37:37.928Z",
+      "updatedAt": "2026-10-04T08:37:37.928Z"
     },
     {
-      "id": "c2681250-cffc-41de-81db-0af19ba70be2",
+      "id": "55d85634-547d-499e-81b7-d12556c467c2",
       "email": "buyer2@n5deal.demo",
       "passwordHash": "80f869511e55ba6f65f8899526942e91aafd4b14b05b0bba3913a6a13a938113",
       "name": "Marcus Chen",
       "role": "BUYER",
       "status": "ACTIVE",
       "company": "Pacific Digital Ventures",
-      "createdAt": "2026-09-09T08:18:05.987Z",
-      "updatedAt": "2026-10-04T08:18:05.987Z"
+      "createdAt": "2026-09-09T08:37:37.928Z",
+      "updatedAt": "2026-10-04T08:37:37.928Z"
     },
     {
-      "id": "b434c2a3-3068-4970-87dd-fcb5fcd354df",
+      "id": "e96a8153-2330-453f-b041-9e037349fcf3",
       "email": "buyer3@n5deal.demo",
       "passwordHash": "80f869511e55ba6f65f8899526942e91aafd4b14b05b0bba3913a6a13a938113",
       "name": "Sofia Alvarez",
       "role": "BUYER",
       "status": "ACTIVE",
       "company": "Iberia Fintech Fund",
-      "createdAt": "2026-09-10T08:18:05.987Z",
-      "updatedAt": "2026-10-03T08:18:05.987Z"
+      "createdAt": "2026-09-10T08:37:37.928Z",
+      "updatedAt": "2026-10-03T08:37:37.928Z"
     },
     {
-      "id": "2a20a795-3486-4cb6-8052-f6857ec0efb8",
+      "id": "bb4977ea-b66d-4706-830b-bbf67ee8fbb6",
       "email": "buyer4@n5deal.demo",
       "passwordHash": "80f869511e55ba6f65f8899526942e91aafd4b14b05b0bba3913a6a13a938113",
       "name": "James Okonkwo",
       "role": "BUYER",
       "status": "ACTIVE",
       "company": "Atlas Holdings",
-      "createdAt": "2026-09-11T08:18:05.987Z",
-      "updatedAt": "2026-10-03T08:18:05.987Z"
+      "createdAt": "2026-09-11T08:37:37.928Z",
+      "updatedAt": "2026-10-03T08:37:37.928Z"
     },
     {
-      "id": "4ea0cec5-0e97-4080-a7b1-34c66ef9bed0",
+      "id": "a3227941-057c-48f6-9fc7-d11d01069118",
       "email": "seller@n5deal.demo",
       "passwordHash": "80f869511e55ba6f65f8899526942e91aafd4b14b05b0bba3913a6a13a938113",
       "name": "Viktor Radek",
       "role": "SELLER",
       "status": "ACTIVE",
       "company": "Baltic Pay Group",
-      "createdAt": "2026-09-12T08:18:05.987Z",
-      "updatedAt": "2026-10-05T08:18:05.987Z"
+      "createdAt": "2026-09-12T08:37:37.928Z",
+      "updatedAt": "2026-10-05T08:37:37.928Z"
     },
     {
-      "id": "6946409c-3fdc-43c3-b62e-fb5b26bbd843",
+      "id": "0add942a-d451-469d-a0b8-784cb4237dcb",
       "email": "seller2@n5deal.demo",
       "passwordHash": "80f869511e55ba6f65f8899526942e91aafd4b14b05b0bba3913a6a13a938113",
       "name": "Nina Patel",
       "role": "SELLER",
       "status": "ACTIVE",
       "company": "ChainLedger Ltd",
-      "createdAt": "2026-09-13T08:18:05.987Z",
-      "updatedAt": "2026-10-05T08:18:05.987Z"
+      "createdAt": "2026-09-13T08:37:37.928Z",
+      "updatedAt": "2026-10-05T08:37:37.928Z"
     },
     {
-      "id": "4d1130ae-1cba-4833-a2f4-2ea466716cc6",
+      "id": "ad7179ea-dd68-4f79-85eb-12100257f3ad",
       "email": "seller3@n5deal.demo",
       "passwordHash": "80f869511e55ba6f65f8899526942e91aafd4b14b05b0bba3913a6a13a938113",
       "name": "Omar Haddad",
       "role": "SELLER",
       "status": "ACTIVE",
       "company": "Gulf Shelf Structures",
-      "createdAt": "2026-09-14T08:18:05.987Z",
-      "updatedAt": "2026-10-02T08:18:05.987Z"
+      "createdAt": "2026-09-14T08:37:37.928Z",
+      "updatedAt": "2026-10-02T08:37:37.928Z"
     }
   ],
   "buyerProfiles": [
     {
-      "id": "04110049-1d68-42bc-8798-16ec955b4eaf",
-      "userId": "761dfb06-8896-4f9c-a653-fb2addd181e7",
+      "id": "1c576196-faff-4e64-a960-30e0de12c2bd",
+      "userId": "ad5aadbd-63ae-4dd9-b1c3-580ffa68019c",
       "headline": "Family office acquiring licensed EMI / payments assets",
       "interests": "Looking for regulated payment institutions and EMI licenses in EU jurisdictions. Prefer assets with live customer base and clean compliance history.",
       "preferredCategories": "EMI,Payments,Fintech",
@@ -108,12 +108,12 @@
       "identityVerified": true,
       "fundsVerified": true,
       "verifiedFundsAmount": 5000000,
-      "createdAt": "2026-09-08T08:18:05.987Z",
-      "updatedAt": "2026-10-04T08:18:05.987Z"
+      "createdAt": "2026-09-08T08:37:37.928Z",
+      "updatedAt": "2026-10-04T08:37:37.928Z"
     },
     {
-      "id": "64dbb8ce-6269-404e-8719-ad3e00d148a3",
-      "userId": "c2681250-cffc-41de-81db-0af19ba70be2",
+      "id": "7a960689-8477-440d-826a-9a45db897f88",
+      "userId": "55d85634-547d-499e-81b7-d12556c467c2",
       "headline": "Strategic buyer for crypto & blockchain infrastructure",
       "interests": "Seeking crypto exchanges, VASP licenses, and blockchain infrastructure companies with revenue traction in APAC or EU.",
       "preferredCategories": "Crypto,VASP,Blockchain",
@@ -129,12 +129,12 @@
       "identityVerified": true,
       "fundsVerified": true,
       "verifiedFundsAmount": 12000000,
-      "createdAt": "2026-09-09T08:18:05.987Z",
-      "updatedAt": "2026-10-04T08:18:05.987Z"
+      "createdAt": "2026-09-09T08:37:37.928Z",
+      "updatedAt": "2026-10-04T08:37:37.928Z"
     },
     {
-      "id": "0d10173d-caeb-420b-a7f6-399339be2599",
-      "userId": "b434c2a3-3068-4970-87dd-fcb5fcd354df",
+      "id": "0c3cb641-c9e1-4e17-a4e5-6d16069697f0",
+      "userId": "e96a8153-2330-453f-b041-9e037349fcf3",
       "headline": "Growth fund targeting neobanks and lending platforms",
       "interests": "Interested in consumer neobanks, digital lending, and BNPL platforms with >€2M ARR and EU passporting potential.",
       "preferredCategories": "Neobank,Lending,BNPL",
@@ -150,12 +150,12 @@
       "identityVerified": true,
       "fundsVerified": false,
       "verifiedFundsAmount": null,
-      "createdAt": "2026-09-10T08:18:05.987Z",
-      "updatedAt": "2026-10-03T08:18:05.987Z"
+      "createdAt": "2026-09-10T08:37:37.928Z",
+      "updatedAt": "2026-10-03T08:37:37.928Z"
     },
     {
-      "id": "4ac3ce8e-af0d-45aa-aed8-72c5398d03df",
-      "userId": "2a20a795-3486-4cb6-8052-f6857ec0efb8",
+      "id": "75d1d5a8-7d88-4814-862a-d1884baa84f3",
+      "userId": "bb4977ea-b66d-4706-830b-bbf67ee8fbb6",
       "headline": "Corporate M&A — banking licenses & shelf companies",
       "interests": "Acquiring banking licenses, shelf companies, and ready-made regulated entities for market entry across EMEA.",
       "preferredCategories": "Banking,License,Shelf Company",
@@ -171,46 +171,46 @@
       "identityVerified": false,
       "fundsVerified": false,
       "verifiedFundsAmount": null,
-      "createdAt": "2026-09-11T08:18:05.987Z",
-      "updatedAt": "2026-10-03T08:18:05.987Z"
+      "createdAt": "2026-09-11T08:37:37.928Z",
+      "updatedAt": "2026-10-03T08:37:37.928Z"
     }
   ],
   "sellerProfiles": [
     {
-      "id": "569d3027-c85a-4a03-b8bc-c4404e63d869",
-      "userId": "4ea0cec5-0e97-4080-a7b1-34c66ef9bed0",
+      "id": "1baef540-0fd1-4a87-8209-37197b921dfc",
+      "userId": "a3227941-057c-48f6-9fc7-d11d01069118",
       "companyName": "Baltic Pay Group",
       "bio": "Operator of a licensed EMI in Lithuania with EU passporting. Building and exiting regulated fintech since 2016.",
       "website": "https://example.com/baltic-pay",
       "verified": true,
-      "createdAt": "2026-09-12T08:18:05.987Z",
-      "updatedAt": "2026-10-05T08:18:05.987Z"
+      "createdAt": "2026-09-12T08:37:37.928Z",
+      "updatedAt": "2026-10-05T08:37:37.928Z"
     },
     {
-      "id": "5d550fbc-6870-4aed-a29a-187bfda116bc",
-      "userId": "6946409c-3fdc-43c3-b62e-fb5b26bbd843",
+      "id": "898d2ff3-db7c-42a0-bf22-13bdb66aa2f0",
+      "userId": "0add942a-d451-469d-a0b8-784cb4237dcb",
       "companyName": "ChainLedger Ltd",
       "bio": "Crypto infrastructure and VASP-licensed custody provider. Seeking strategic exit after 5 years of growth.",
       "website": "https://example.com/chainledger",
       "verified": true,
-      "createdAt": "2026-09-13T08:18:05.987Z",
-      "updatedAt": "2026-10-05T08:18:05.987Z"
+      "createdAt": "2026-09-13T08:37:37.928Z",
+      "updatedAt": "2026-10-05T08:37:37.928Z"
     },
     {
-      "id": "0faf4f9d-4ad4-4de6-bd19-0efcfc99c2d9",
-      "userId": "4d1130ae-1cba-4833-a2f4-2ea466716cc6",
+      "id": "84640545-d90a-433f-a960-167119263a77",
+      "userId": "ad7179ea-dd68-4f79-85eb-12100257f3ad",
       "companyName": "Gulf Shelf Structures",
       "bio": "Specialist in ready-made corporate and licensed structures across UAE and offshore jurisdictions.",
       "website": null,
       "verified": false,
-      "createdAt": "2026-09-14T08:18:05.987Z",
-      "updatedAt": "2026-10-02T08:18:05.987Z"
+      "createdAt": "2026-09-14T08:37:37.928Z",
+      "updatedAt": "2026-10-02T08:37:37.928Z"
     }
   ],
   "assets": [
     {
-      "id": "350fd150-cce9-4315-b186-c400f59ee75b",
-      "sellerId": "4ea0cec5-0e97-4080-a7b1-34c66ef9bed0",
+      "id": "36a1e873-889d-40db-9912-96f6ce3c1e2c",
+      "sellerId": "a3227941-057c-48f6-9fc7-d11d01069118",
       "title": "Lithuanian EMI with EU Passporting",
       "summary": "Fully operational EMI license holder with SEPA access and 12,000 active merchants.",
       "description": "Regulated Electronic Money Institution based in Vilnius. Holds a valid EMI license from the Bank of Lithuania with passporting rights across the EEA. Current stack includes core ledger, KYC/AML pipeline, and merchant onboarding. Clean audit history for the last 3 years. Seller open to share sale or asset carve-out of the license entity.",
@@ -235,12 +235,12 @@
       "discreteMode": true,
       "exclusivityBuyerId": null,
       "exclusivityUntil": null,
-      "createdAt": "2026-09-16T08:18:05.987Z",
-      "updatedAt": "2026-10-05T08:18:05.987Z"
+      "createdAt": "2026-09-16T08:37:37.929Z",
+      "updatedAt": "2026-10-05T08:37:37.929Z"
     },
     {
-      "id": "ef50f029-c6ef-4ce3-aaa4-4fa3c00129fd",
-      "sellerId": "4ea0cec5-0e97-4080-a7b1-34c66ef9bed0",
+      "id": "ec284c80-786a-4118-9cd0-8c9a2e30456c",
+      "sellerId": "a3227941-057c-48f6-9fc7-d11d01069118",
       "title": "Payment Gateway SaaS — Baltics",
       "summary": "B2B payment orchestration SaaS with recurring revenue and white-label clients.",
       "description": "Payment gateway and orchestration layer serving PSPs and marketplaces across the Baltics and Nordics. ARR ~€1.1M with 85% gross margin. Ideal bolt-on for a payments group. No own license — operates via partner EMI.",
@@ -265,12 +265,12 @@
       "discreteMode": false,
       "exclusivityBuyerId": null,
       "exclusivityUntil": null,
-      "createdAt": "2026-09-17T08:18:05.987Z",
-      "updatedAt": "2026-10-04T08:18:05.987Z"
+      "createdAt": "2026-09-17T08:37:37.929Z",
+      "updatedAt": "2026-10-04T08:37:37.929Z"
     },
     {
-      "id": "56a702a5-dd86-44f8-93b5-35d7b8c17e2e",
-      "sellerId": "6946409c-3fdc-43c3-b62e-fb5b26bbd843",
+      "id": "605fbeaf-260b-4e52-86bd-95aa5d1d0b33",
+      "sellerId": "0add942a-d451-469d-a0b8-784cb4237dcb",
       "title": "EU VASP Crypto Custody Platform",
       "summary": "Estonian VASP with institutional custody product and MiCA-ready roadmap.",
       "description": "Licensed Virtual Asset Service Provider offering cold/warm custody for institutions. ~€800k ARR, growing 60% YoY. Roadmap includes MiCA CASP application.",
@@ -295,12 +295,12 @@
       "discreteMode": true,
       "exclusivityBuyerId": null,
       "exclusivityUntil": null,
-      "createdAt": "2026-09-18T08:18:05.987Z",
-      "updatedAt": "2026-10-05T08:18:05.987Z"
+      "createdAt": "2026-09-18T08:37:37.929Z",
+      "updatedAt": "2026-10-05T08:37:37.929Z"
     },
     {
-      "id": "12351724-b30a-469b-9a08-61edb4d1d977",
-      "sellerId": "6946409c-3fdc-43c3-b62e-fb5b26bbd843",
+      "id": "c29edc42-cb94-4329-9197-80efee78a3b8",
+      "sellerId": "0add942a-d451-469d-a0b8-784cb4237dcb",
       "title": "Crypto OTC Desk & Brokerage",
       "summary": "Singapore-based OTC desk with institutional clients and brokerage license path.",
       "description": "OTC trading desk focused on large-ticket crypto trades for family offices and funds. Strong relationships in APAC.",
@@ -325,12 +325,12 @@
       "discreteMode": false,
       "exclusivityBuyerId": null,
       "exclusivityUntil": null,
-      "createdAt": "2026-09-19T08:18:05.987Z",
-      "updatedAt": "2026-10-04T08:18:05.987Z"
+      "createdAt": "2026-09-19T08:37:37.929Z",
+      "updatedAt": "2026-10-04T08:37:37.929Z"
     },
     {
-      "id": "efe372da-22fd-409b-9e11-58901c6d5e9f",
-      "sellerId": "4d1130ae-1cba-4833-a2f4-2ea466716cc6",
+      "id": "497ce6c8-712f-455d-a08e-25e5eaa2f8cf",
+      "sellerId": "ad7179ea-dd68-4f79-85eb-12100257f3ad",
       "title": "UAE Shelf Company — DIFC Ready",
       "summary": "Clean shelf company in DIFC with banking relationships ready for activation.",
       "description": "Dormant but fully incorporated DIFC entity with registered office and initial banking introductions. Suitable for fintech market entry into MENA.",
@@ -355,12 +355,12 @@
       "discreteMode": false,
       "exclusivityBuyerId": null,
       "exclusivityUntil": null,
-      "createdAt": "2026-09-20T08:18:05.987Z",
-      "updatedAt": "2026-10-03T08:18:05.987Z"
+      "createdAt": "2026-09-20T08:37:37.929Z",
+      "updatedAt": "2026-10-03T08:37:37.929Z"
     },
     {
-      "id": "2c724089-ca52-478f-a4b6-0a3db00cc75a",
-      "sellerId": "4d1130ae-1cba-4833-a2f4-2ea466716cc6",
+      "id": "fcf8f084-eb6b-4f94-85fb-c8e25ba3965f",
+      "sellerId": "ad7179ea-dd68-4f79-85eb-12100257f3ad",
       "title": "UK EMI Application Vehicle",
       "summary": "UK company with advanced EMI application dossier for FCA submission.",
       "description": "Purpose-built vehicle with prepared regulatory application materials for UK EMI authorization. Includes policies, capital plan, and key hire pipeline.",
@@ -385,12 +385,12 @@
       "discreteMode": false,
       "exclusivityBuyerId": null,
       "exclusivityUntil": null,
-      "createdAt": "2026-09-21T08:18:05.987Z",
-      "updatedAt": "2026-10-03T08:18:05.987Z"
+      "createdAt": "2026-09-21T08:37:37.929Z",
+      "updatedAt": "2026-10-03T08:37:37.929Z"
     },
     {
-      "id": "cbf47dfd-c815-4cc6-9023-84fff407e0e1",
-      "sellerId": "4ea0cec5-0e97-4080-a7b1-34c66ef9bed0",
+      "id": "6aa8ef48-9db6-473b-93ab-c9c383fa19ab",
+      "sellerId": "a3227941-057c-48f6-9fc7-d11d01069118",
       "title": "Consumer Neobank — Soft Launch",
       "summary": "EU neobank soft-launched with e-money partner, 45k waitlist users.",
       "description": "Consumer-facing neobank brand with modern app, partnered e-money stack, and strong waitlist. Seeking acquisition by a licensed group.",
@@ -415,12 +415,12 @@
       "discreteMode": false,
       "exclusivityBuyerId": null,
       "exclusivityUntil": null,
-      "createdAt": "2026-09-22T08:18:05.987Z",
-      "updatedAt": "2026-10-04T08:18:05.987Z"
+      "createdAt": "2026-09-22T08:37:37.929Z",
+      "updatedAt": "2026-10-04T08:37:37.929Z"
     },
     {
-      "id": "a873e91d-7678-486d-bd5f-67e2941765ce",
-      "sellerId": "6946409c-3fdc-43c3-b62e-fb5b26bbd843",
+      "id": "ee4a3c1b-91d7-48f1-8890-1c18971fc64c",
+      "sellerId": "0add942a-d451-469d-a0b8-784cb4237dcb",
       "title": "Digital Lending Platform (BNPL)",
       "summary": "BNPL / installment lending platform with merchant network in Southern Europe.",
       "description": "Technology and merchant contracts for a BNPL product. Risk models, underwriting engine, and integrations included.",
@@ -445,75 +445,75 @@
       "discreteMode": false,
       "exclusivityBuyerId": null,
       "exclusivityUntil": null,
-      "createdAt": "2026-09-23T08:18:05.987Z",
-      "updatedAt": "2026-10-05T08:18:05.987Z"
+      "createdAt": "2026-09-23T08:37:37.929Z",
+      "updatedAt": "2026-10-05T08:37:37.929Z"
     }
   ],
   "dealRooms": [
     {
-      "id": "dc7baa49-d23b-46a9-86fb-3d247654ca54",
-      "assetId": "350fd150-cce9-4315-b186-c400f59ee75b",
-      "buyerId": "761dfb06-8896-4f9c-a653-fb2addd181e7",
-      "sellerId": "4ea0cec5-0e97-4080-a7b1-34c66ef9bed0",
+      "id": "b81d31ab-2e9c-49b0-a2aa-39a5732ee7ef",
+      "assetId": "36a1e873-889d-40db-9912-96f6ce3c1e2c",
+      "buyerId": "ad5aadbd-63ae-4dd9-b1c3-580ffa68019c",
+      "sellerId": "a3227941-057c-48f6-9fc7-d11d01069118",
       "stage": "NDA_SIGNED",
-      "ndaSignedAt": "2026-10-01T08:18:05.987Z",
+      "ndaSignedAt": "2026-10-01T08:37:37.929Z",
       "checklistDone": [
         "ubo-chart",
         "sof",
         "banking-rekyc"
       ],
       "notes": "Serious buyer — CoC pack in progress",
-      "createdAt": "2026-09-28T08:18:05.987Z",
-      "updatedAt": "2026-10-04T08:18:05.987Z"
+      "createdAt": "2026-09-28T08:37:37.929Z",
+      "updatedAt": "2026-10-04T08:37:37.929Z"
     },
     {
-      "id": "ccd1b9b5-c1e7-476d-a67f-28e3866cb6d8",
-      "assetId": "56a702a5-dd86-44f8-93b5-35d7b8c17e2e",
-      "buyerId": "c2681250-cffc-41de-81db-0af19ba70be2",
-      "sellerId": "6946409c-3fdc-43c3-b62e-fb5b26bbd843",
+      "id": "37509293-0f7f-4bb9-be0d-a492780d4951",
+      "assetId": "605fbeaf-260b-4e52-86bd-95aa5d1d0b33",
+      "buyerId": "55d85634-547d-499e-81b7-d12556c467c2",
+      "sellerId": "0add942a-d451-469d-a0b8-784cb4237dcb",
       "stage": "DATA_ROOM",
-      "ndaSignedAt": "2026-09-30T08:18:05.987Z",
+      "ndaSignedAt": "2026-09-30T08:37:37.929Z",
       "checklistDone": [
         "ubo-chart",
         "fit-proper"
       ],
       "notes": null,
-      "createdAt": "2026-09-29T08:18:05.987Z",
-      "updatedAt": "2026-10-03T08:18:05.987Z"
+      "createdAt": "2026-09-29T08:37:37.929Z",
+      "updatedAt": "2026-10-03T08:37:37.929Z"
     },
     {
-      "id": "d1eb2697-4ba5-4418-80b1-35463d37c6ce",
-      "assetId": "350fd150-cce9-4315-b186-c400f59ee75b",
-      "buyerId": "b434c2a3-3068-4970-87dd-fcb5fcd354df",
-      "sellerId": "4ea0cec5-0e97-4080-a7b1-34c66ef9bed0",
+      "id": "1bc768df-d9b5-4483-a8a6-892c465b8a71",
+      "assetId": "36a1e873-889d-40db-9912-96f6ce3c1e2c",
+      "buyerId": "e96a8153-2330-453f-b041-9e037349fcf3",
+      "sellerId": "a3227941-057c-48f6-9fc7-d11d01069118",
       "stage": "INTERESTED",
       "ndaSignedAt": null,
       "checklistDone": [],
       "notes": null,
-      "createdAt": "2026-10-02T08:18:05.987Z",
-      "updatedAt": "2026-10-02T08:18:05.987Z"
+      "createdAt": "2026-10-02T08:37:37.929Z",
+      "updatedAt": "2026-10-02T08:37:37.929Z"
     }
   ],
   "messages": [
     {
-      "id": "6782ec5a-4420-4920-a96a-8f16d335a1dd",
-      "fromUserId": "761dfb06-8896-4f9c-a653-fb2addd181e7",
-      "toUserId": "4ea0cec5-0e97-4080-a7b1-34c66ef9bed0",
-      "assetId": "350fd150-cce9-4315-b186-c400f59ee75b",
+      "id": "2465d594-f745-43fe-b482-79711852af66",
+      "fromUserId": "ad5aadbd-63ae-4dd9-b1c3-580ffa68019c",
+      "toUserId": "a3227941-057c-48f6-9fc7-d11d01069118",
+      "assetId": "36a1e873-889d-40db-9912-96f6ce3c1e2c",
       "subject": "Interest in Lithuanian EMI",
       "body": "Hello Viktor — we are evaluating your EMI asset for a strategic acquisition. Could we schedule an intro call under NDA?",
       "read": false,
-      "createdAt": "2026-10-04T08:18:05.987Z"
+      "createdAt": "2026-10-04T08:37:37.929Z"
     },
     {
-      "id": "c51d41ed-4956-463e-9dac-2d65fe2b7aa7",
-      "fromUserId": "6946409c-3fdc-43c3-b62e-fb5b26bbd843",
-      "toUserId": "c2681250-cffc-41de-81db-0af19ba70be2",
-      "assetId": "56a702a5-dd86-44f8-93b5-35d7b8c17e2e",
+      "id": "dfcab8d6-a29d-4d52-b2cf-1a91debdeee5",
+      "fromUserId": "0add942a-d451-469d-a0b8-784cb4237dcb",
+      "toUserId": "55d85634-547d-499e-81b7-d12556c467c2",
+      "assetId": "605fbeaf-260b-4e52-86bd-95aa5d1d0b33",
       "subject": "Match for your crypto mandate",
       "body": "Hi Marcus — your buyer profile aligns with our VASP custody platform. Happy to share a teaser deck.",
       "read": true,
-      "createdAt": "2026-10-03T08:18:05.987Z"
+      "createdAt": "2026-10-03T08:37:37.929Z"
     }
   ]
 }

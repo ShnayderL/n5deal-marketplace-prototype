@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Check, Lock, Minus, Sparkles, Timer } from "lucide-react";
 import { useState, useTransition } from "react";
 import { instantShortlistAction } from "@/app/actions";
+import { Flag } from "@/components/flag";
 import { KyfRing } from "@/components/kyf-panel";
 import {
   BUDGETS,
@@ -148,7 +149,8 @@ export function InstantShortlist({
                     <span className="truncate text-sm font-semibold">{item.title}</span>
                   </div>
                   <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-[var(--muted)]">
-                    <span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <Flag jurisdiction={item.jurisdiction} size={16} />
                       <b className="font-mono text-[var(--text)]">{item.code}</b> · {item.licenseType}
                     </span>
                     <span className="inline-flex items-center gap-1">

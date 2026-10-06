@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpDown, Banknote, BadgeCheck, Building2, Globe, UserCheck } from "lucide-react";
 import { AssetCard } from "@/components/cards";
+import { Flag } from "@/components/flag";
 import { AssetFilters } from "@/components/forms";
 import { EmptyState } from "@/components/ui";
 import { parseSmartQuery, scoreAssetForBuyer } from "@/lib/ai";
@@ -112,6 +113,8 @@ export default async function AssetsPage({ searchParams }: { searchParams: Promi
     { v: String(allPublished.filter((a) => a.bankingStatus === "ACTIVE").length), l: "With active banking" },
     { v: String(allPublished.filter((a) => a.discreteMode).length), l: "Discrete / NDA-gated" },
   ];
+  const markets = [...allPublished.reduce((m, a) => m.set(a.jurisdiction, (m.get(a.jurisdiction) || 0) + 1), new Map<string, number>())]
+    .sort((a, b) => b[1] - a[1]);
   const activeSignals = SIGNAL_CHIPS.filter((c) => params[c.key] === c.value).length;
   const sortOptions = [
     { id: "kyf", label: "KYF readiness" },
@@ -179,6 +182,24 @@ export default async function AssetsPage({ searchParams }: { searchParams: Promi
                 Clear signals
               </Link>
             ) : null}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="mr-1 text-xs font-bold uppercase tracking-wider text-[var(--muted)]">Market</span>
+            {markets.map(([j, count]) => {
+              const active = params.jurisdiction === j;
+              return (
+                <Link
+                  key={j}
+                  href={hrefWith(params, { jurisdiction: active ? undefined : j })}
+                  className={cn("chip", active && "chip-active")}
+                  scroll={false}
+                >
+                  <Flag jurisdiction={j} size={18} />
+                  {j}
+                  <span className={active ? "text-white/60" : "text-[var(--muted)]"}>{count}</span>
+                </Link>
+              );
+            })}
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <span className="mr-1 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[var(--muted)]">
