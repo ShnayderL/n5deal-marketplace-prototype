@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Syne } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { headers } from "next/headers";
 import { ChatAssistant } from "@/components/chat-assistant";
 import { CookieBanner } from "@/components/cookie-banner";
@@ -9,14 +9,15 @@ import { SiteHeader } from "@/components/ui";
 import { getSession } from "@/lib/auth";
 import "./globals.css";
 
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "latin-ext"],
 });
 
-const syne = Syne({
-  variable: "--font-syne",
-  subsets: ["latin"],
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin", "latin-ext"],
+  weight: ["500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${manrope.variable} ${syne.variable} h-full antialiased`}
+      className={`${inter.variable} ${jakarta.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col pb-20 md:pb-0">
         <SiteHeader user={session} pathname={pathname} />

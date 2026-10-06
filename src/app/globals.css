@@ -21,8 +21,8 @@
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--text);
-  --font-sans: var(--font-manrope);
-  --font-display: var(--font-syne);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-jakarta);
 }
 
 * {
@@ -38,7 +38,8 @@ body {
   min-height: 100vh;
   color: var(--text);
   background: linear-gradient(180deg, #ffffff 0%, var(--bg) 40%, #eef2f7 100%);
-  font-family: var(--font-manrope), sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "cv11", "ss01";
 }
 
 a {
@@ -47,7 +48,8 @@ a {
 }
 
 .font-display {
-  font-family: var(--font-syne), sans-serif;
+  font-family: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 .surface {

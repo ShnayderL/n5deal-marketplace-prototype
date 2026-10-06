@@ -43,8 +43,6 @@ const STEPS = [
   { icon: Handshake, title: "LOI & exclusivity", body: "Seller grants exclusivity once critical CoC items are complete.", tag: "Weeks" },
 ];
 
-const LIVE_MARKETS = ["Lithuania", "Estonia", "UK", "Germany", "Spain", "UAE", "Singapore"];
-
 const FEATURED_JURISDICTIONS = ["Lithuania", "Estonia", "UK", "Germany", "Spain", "Cyprus", "UAE", "Singapore"];
 
 export default async function HomePage() {
@@ -134,12 +132,6 @@ export default async function HomePage() {
                   Avg. first reply under 2 hours
                 </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                {LIVE_MARKETS.map((j) => (
-                  <Flag key={j} jurisdiction={j} size={22} className="shadow-[0_0_0_1px_rgba(255,255,255,0.25)]" />
-                ))}
-                <span className="ml-1.5 text-xs text-white/60">live markets</span>
-              </div>
             </div>
 
             <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6 sm:grid-cols-4">
@@ -163,8 +155,39 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* HOW IT WORKS */}
+      <section id="how" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-14 md:px-6">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--accent-2)]">Regulated deal path</p>
+        <h2 className="mt-2 font-display text-3xl font-bold">From mandate to LOI in one workspace</h2>
+        <ol className="mt-8 grid gap-4 md:grid-cols-5">
+          {STEPS.map(({ icon: Icon, title, body, tag }, i) => (
+            <li key={title} className="relative rounded-2xl border border-[var(--border)] bg-white p-5">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-bold text-[var(--muted)]">0{i + 1}</span>
+                <span className="badge">{tag}</span>
+              </div>
+              <Icon className="mt-4 h-6 w-6 text-[var(--accent-2)]" />
+              <h3 className="mt-3 font-semibold">{title}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{body}</p>
+            </li>
+          ))}
+        </ol>
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          {[
+            { v: String(seriousBuyers), l: "Verified-funds buyers active" },
+            { v: String(dealRooms), l: "Deal Rooms in progress" },
+            { v: "14 days", l: "Standard exclusivity window" },
+          ].map((s) => (
+            <div key={s.l} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 ring-1 ring-[var(--border)]">
+              <span className="font-display text-2xl font-bold">{s.v}</span>
+              <span className="text-sm text-[var(--muted)]">{s.l}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* SIGNAL STRIP */}
-      <section className="border-b border-[var(--border)] bg-white">
+      <section className="border-y border-[var(--border)] bg-white">
         <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
           <div className="mb-8 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
@@ -194,8 +217,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      <PartnersSection />
 
       {/* ACQUIRE VS APPLY */}
       <section className="mx-auto max-w-6xl px-4 py-14 md:px-6">
@@ -275,39 +296,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section id="how" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-14 md:px-6">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--accent-2)]">Regulated deal path</p>
-        <h2 className="mt-2 font-display text-3xl font-bold">From mandate to LOI in one workspace</h2>
-        <ol className="mt-8 grid gap-4 md:grid-cols-5">
-          {STEPS.map(({ icon: Icon, title, body, tag }, i) => (
-            <li key={title} className="relative rounded-2xl border border-[var(--border)] bg-white p-5">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-bold text-[var(--muted)]">0{i + 1}</span>
-                <span className="badge">{tag}</span>
-              </div>
-              <Icon className="mt-4 h-6 w-6 text-[var(--accent-2)]" />
-              <h3 className="mt-3 font-semibold">{title}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{body}</p>
-            </li>
-          ))}
-        </ol>
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          {[
-            { v: String(seriousBuyers), l: "Verified-funds buyers active" },
-            { v: String(dealRooms), l: "Deal Rooms in progress" },
-            { v: "14 days", l: "Standard exclusivity window" },
-          ].map((s) => (
-            <div key={s.l} className="flex items-center gap-3 rounded-2xl bg-[var(--bg-soft)] px-4 py-3">
-              <span className="font-display text-2xl font-bold">{s.v}</span>
-              <span className="text-sm text-[var(--muted)]">{s.l}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* DEAL DESK */}
-      <section className="mx-auto max-w-6xl px-4 pb-14 md:px-6">
+      <section className="mx-auto max-w-6xl px-4 py-14 md:px-6">
         <div className="grid overflow-hidden rounded-[22px] border border-[var(--border)] bg-white lg:grid-cols-[1.15fr_0.85fr]">
           <div className="relative min-h-[320px]">
             <Image src={IMAGES.boardroom} alt="N5Deal deal desk reviewing a change-of-control file" fill className="object-cover" sizes="(min-width: 1024px) 640px, 100vw" />
@@ -448,6 +438,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <PartnersSection />
 
       {/* FINAL CTA */}
       <section className="hero-dark overflow-hidden">
