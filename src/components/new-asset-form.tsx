@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { createAssetAction } from "@/app/actions";
 import { validateAssetDraft } from "@/lib/ai";
 import { CATEGORIES, JURISDICTIONS } from "@/lib/constants";
+import type { BankingStatus, EntityType } from "@/lib/types";
 
 export function NewAssetForm() {
   const [error, setError] = useState<string | null>(null);
@@ -21,6 +22,13 @@ export function NewAssetForm() {
           category: String(formData.get("category") || ""),
           jurisdiction: String(formData.get("jurisdiction") || ""),
           askingPrice: Number(formData.get("askingPrice") || 0),
+          licenseType: String(formData.get("licenseType") || ""),
+          bankingStatus: String(formData.get("bankingStatus") || "NONE") as BankingStatus,
+          entityType: String(formData.get("entityType") || "SHELL") as EntityType,
+          regulator: String(formData.get("regulator") || "") || null,
+          changeOfControlNotes: String(formData.get("changeOfControlNotes") || "") || null,
+          servicesInScope: String(formData.get("servicesInScope") || ""),
+          hasComplianceOfficer: formData.get("hasComplianceOfficer") === "on",
         };
         const local = validateAssetDraft(draft);
         setWarnings(local.warnings);
@@ -64,7 +72,28 @@ export function NewAssetForm() {
             ))}
           </select>
         </div>
-        <Field label="License type" name="licenseType" placeholder="EMI / VASP / …" />
+        <Field label="License type" name="licenseType" required placeholder="EMI / VASP / PI …" />
+        <Field label="Regulator" name="regulator" placeholder="Bank of Lithuania / FCA / CySEC" />
+        <div>
+          <label className="label" htmlFor="bankingStatus">
+            Banking continuity
+          </label>
+          <select className="select" id="bankingStatus" name="bankingStatus" defaultValue="ACTIVE">
+            <option value="ACTIVE">Active banking</option>
+            <option value="IN_PROGRESS">Banking in progress</option>
+            <option value="NONE">No banking</option>
+          </select>
+        </div>
+        <div>
+          <label className="label" htmlFor="entityType">
+            Entity type
+          </label>
+          <select className="select" id="entityType" name="entityType" defaultValue="OPERATIONAL">
+            <option value="OPERATIONAL">Operational</option>
+            <option value="SHELL">Shell / ready-made</option>
+            <option value="APPLICATION">License application</option>
+          </select>
+        </div>
         <div>
           <label className="label" htmlFor="dealReadiness">
             Deal readiness
@@ -75,8 +104,15 @@ export function NewAssetForm() {
             <option value="URGENT">Urgent</option>
           </select>
         </div>
+        <Field label="Services in scope" name="servicesInScope" placeholder="e-money, SEPA, custody…" />
         <Field label="Annual revenue (EUR)" name="annualRevenue" type="number" placeholder="optional" />
         <Field label="Employees" name="employees" type="number" placeholder="optional" />
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Check label="Compliance officer / MLRO" name="hasComplianceOfficer" defaultChecked />
+        <Check label="Local director" name="hasLocalDirector" defaultChecked />
+        <Check label="EEA/UK passporting" name="hasPassporting" />
       </div>
 
       <div>
@@ -97,6 +133,17 @@ export function NewAssetForm() {
           placeholder="License status, traction, deal structure, exclusions…"
         />
       </div>
+      <div>
+        <label className="label" htmlFor="changeOfControlNotes">
+          Change-of-control notes
+        </label>
+        <textarea
+          className="textarea"
+          id="changeOfControlNotes"
+          name="changeOfControlNotes"
+          placeholder="Filing timelines, supervisor notification, share vs asset deal…"
+        />
+      </div>
       <Field label="Tags (comma-separated)" name="tags" placeholder="emi,sepa,regulated" />
 
       <div>
@@ -110,8 +157,8 @@ export function NewAssetForm() {
       </div>
 
       {warnings.length ? (
-        <div className="rounded-xl border border-[rgba(240,180,41,0.35)] bg-[rgba(240,180,41,0.08)] p-3 text-sm text-[#ffe4a3]">
-          <div className="font-semibold">AI validation suggestions</div>
+        <div className="rounded-xl border border-[rgba(240,180,41,0.35)] bg-[rgba(240,180,41,0.08)] p-3 text-sm text-[#8a6200]">
+          <div className="font-semibold">Smart Asset ID — suggestions</div>
           <ul className="mt-1 list-disc pl-5">
             {warnings.map((w) => (
               <li key={w}>{w}</li>
@@ -125,6 +172,23 @@ export function NewAssetForm() {
         {pending ? "Publishing…" : "Publish asset"}
       </button>
     </form>
+  );
+}
+
+function Check({
+  label,
+  name,
+  defaultChecked,
+}: {
+  label: string;
+  name: string;
+  defaultChecked?: boolean;
+}) {
+  return (
+    <label className="flex items-center gap-2 text-sm">
+      <input type="checkbox" name={name} defaultChecked={defaultChecked} className="size-4 accent-[var(--accent)]" />
+      {label}
+    </label>
   );
 }
 

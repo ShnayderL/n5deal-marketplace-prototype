@@ -2,6 +2,11 @@ import { randomUUID } from "crypto";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { hashPassword, verifyPassword } from "./password";
+import {
+  normalizeBankingStatus,
+  normalizeDealReadiness,
+  normalizeEntityType,
+} from "./kyf";
 import type {
   Asset,
   AssetStatus,
@@ -15,6 +20,59 @@ import type {
 import { createSeedDatabase } from "./seed-data";
 
 export { hashPassword, verifyPassword };
+
+function normalizeAsset(raw: Partial<Asset> & Pick<Asset, "id" | "sellerId" | "title">): Asset {
+  return {
+    id: raw.id,
+    sellerId: raw.sellerId,
+    title: raw.title,
+    summary: raw.summary || "",
+    description: raw.description || "",
+    category: raw.category || "Fintech",
+    jurisdiction: raw.jurisdiction || "EU",
+    licenseType: raw.licenseType ?? null,
+    askingPrice: raw.askingPrice || 0,
+    currency: raw.currency || "EUR",
+    annualRevenue: raw.annualRevenue ?? null,
+    employees: raw.employees ?? null,
+    dealReadiness: normalizeDealReadiness(raw.dealReadiness),
+    status: (raw.status as AssetStatus) || "DRAFT",
+    tags: raw.tags || "",
+    bankingStatus: normalizeBankingStatus(raw.bankingStatus),
+    hasComplianceOfficer: Boolean(raw.hasComplianceOfficer),
+    hasLocalDirector: Boolean(raw.hasLocalDirector),
+    hasPassporting: Boolean(raw.hasPassporting),
+    entityType: normalizeEntityType(raw.entityType),
+    changeOfControlNotes: raw.changeOfControlNotes ?? null,
+    servicesInScope: raw.servicesInScope || "",
+    regulator: raw.regulator ?? null,
+    createdAt: raw.createdAt || new Date().toISOString(),
+    updatedAt: raw.updatedAt || new Date().toISOString(),
+  };
+}
+
+function normalizeBuyerProfile(
+  raw: Partial<BuyerProfile> & Pick<BuyerProfile, "id" | "userId">,
+): BuyerProfile {
+  return {
+    id: raw.id,
+    userId: raw.userId,
+    headline: raw.headline || "",
+    interests: raw.interests || "",
+    preferredCategories: raw.preferredCategories || "",
+    preferredJurisdictions: raw.preferredJurisdictions || "",
+    budgetMin: raw.budgetMin || 0,
+    budgetMax: raw.budgetMax || 0,
+    ticketNote: raw.ticketNote ?? null,
+    verified: Boolean(raw.verified),
+    requiresBanking: Boolean(raw.requiresBanking),
+    requiresPassporting: Boolean(raw.requiresPassporting),
+    timelineWeeks: raw.timelineWeeks ?? null,
+    servicesNeeded: raw.servicesNeeded || "",
+    createdAt: raw.createdAt || new Date().toISOString(),
+    updatedAt: raw.updatedAt || new Date().toISOString(),
+  };
+}
 
 const globalStore = globalThis as unknown as {
   n5dealDb?: Database;
@@ -39,7 +97,12 @@ function loadDatabase(): Database {
 
   if (existsSync(dbPath)) {
     const parsed = JSON.parse(readFileSync(dbPath, "utf8")) as Database;
-    return parsed;
+    const migrated: Database = {
+      ...parsed,
+      assets: (parsed.assets || []).map((a) => normalizeAsset(a)),
+      buyerProfiles: (parsed.buyerProfiles || []).map((p) => normalizeBuyerProfile(p)),
+    };
+    return migrated;
   }
 
   const seeded = createSeedDatabase();
@@ -146,6 +209,10 @@ export const store = {
         budgetMin: input.budgetMin,
         budgetMax: input.budgetMax,
         ticketNote: input.ticketNote ?? null,
+        requiresBanking: input.requiresBanking ?? false,
+        requiresPassporting: input.requiresPassporting ?? false,
+        timelineWeeks: input.timelineWeeks ?? null,
+        servicesNeeded: input.servicesNeeded ?? "",
       });
     }
     touch();
@@ -198,7 +265,8 @@ export const store = {
         if (filter?.maxPrice != null && asset.askingPrice > filter.maxPrice) return false;
         if (filter?.q) {
           const q = filter.q.toLowerCase();
-          const hay = `${asset.title} ${asset.summary} ${asset.tags} ${asset.licenseType || ""} ${asset.category} ${asset.jurisdiction}`.toLowerCase();
+          const hay =
+            `${asset.title} ${asset.summary} ${asset.tags} ${asset.licenseType || ""} ${asset.category} ${asset.jurisdiction} ${asset.servicesInScope} ${asset.regulator || ""}`.toLowerCase();
           if (!hay.includes(q)) return false;
         }
         return true;
@@ -215,7 +283,7 @@ export const store = {
   createAsset(
     input: Omit<Asset, "id" | "createdAt" | "updatedAt" | "currency"> & { currency?: string },
   ) {
-    const asset: Asset = {
+    const asset = normalizeAsset({
       id: randomUUID(),
       currency: input.currency || "EUR",
       createdAt: now(),
@@ -233,7 +301,15 @@ export const store = {
       dealReadiness: input.dealReadiness,
       status: input.status,
       tags: input.tags,
-    };
+      bankingStatus: input.bankingStatus,
+      hasComplianceOfficer: input.hasComplianceOfficer,
+      hasLocalDirector: input.hasLocalDirector,
+      hasPassporting: input.hasPassporting,
+      entityType: input.entityType,
+      changeOfControlNotes: input.changeOfControlNotes,
+      servicesInScope: input.servicesInScope,
+      regulator: input.regulator,
+    });
     db().assets.unshift(asset);
     touch();
     return hydrateAsset(asset);

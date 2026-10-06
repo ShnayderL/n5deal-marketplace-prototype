@@ -6,23 +6,31 @@ import { useState } from "react";
 import { IMAGES } from "@/lib/images";
 
 const QUICK_REPLIES = [
-  "How do I browse EMI listings?",
-  "What does buyer verification mean?",
+  "What is KYF Deal Readiness?",
+  "How does Mandate Matcher work?",
   "Help me contact a seller",
 ];
 
 const REPLY_MAP: Record<string, string> = {
   default:
-    "I'm Maya, your N5Deal AI expert. I can guide you through listings, buyer profiles, and how to start a deal conversation. What would you like to explore?",
-  emi: "Filter assets by category EMI or try the smart search: “EMI in Lithuania under €3m”. Verified buyers can message sellers directly from an asset page.",
+    "I'm Maya, your N5Deal AI expert. Ask me about KYF Deal Readiness, Mandate Matcher, Smart Asset ID, or how to start a deal conversation.",
+  kyf: "KYF Deal Readiness scores each listing on banking continuity, compliance roles, passporting, entity type, and change-of-control notes — signals buyers use before NDA. Open any asset to see the full breakdown.",
+  mandate:
+    "Mandate Matcher ranks assets against your buyer profile: category, jurisdiction, budget, required banking/passporting, and services overlap. Edit your mandate under Profile, then check the Buyer dashboard.",
+  assetId:
+    "Smart Asset ID validation blocks thin listings — sellers must declare license type, banking status, and entity type. CoC notes and regulator improve the KYF grade.",
+  emi: "Filter assets by category EMI or try smart search: “EMI in Lithuania with banking under €3m”. KYF badges show deal readiness on each card.",
   verification:
-    "Verified buyers have a completed mandate profile reviewed by the platform. It helps sellers prioritize serious acquisition interest.",
+    "Verified buyers have a completed mandate profile. Sellers prioritize serious acquisition interest with banking/passporting requirements filled in.",
   contact:
     "Sign in as a Buyer, open a listing, and use the Contact form. Your message appears in Messages for both parties.",
 };
 
 function replyFor(text: string) {
   const lower = text.toLowerCase();
+  if (lower.includes("kyf") || lower.includes("readiness")) return REPLY_MAP.kyf;
+  if (lower.includes("mandate") || lower.includes("match")) return REPLY_MAP.mandate;
+  if (lower.includes("asset id") || lower.includes("publish") || lower.includes("validat")) return REPLY_MAP.assetId;
   if (lower.includes("emi") || lower.includes("listing")) return REPLY_MAP.emi;
   if (lower.includes("verif")) return REPLY_MAP.verification;
   if (lower.includes("contact") || lower.includes("seller")) return REPLY_MAP.contact;

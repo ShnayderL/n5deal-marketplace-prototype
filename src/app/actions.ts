@@ -89,6 +89,10 @@ const buyerProfileSchema = z.object({
   budgetMax: z.coerce.number().int().min(0),
   ticketNote: z.string().optional(),
   company: z.string().optional(),
+  requiresBanking: z.enum(["true", "false"]).optional(),
+  requiresPassporting: z.enum(["true", "false"]).optional(),
+  timelineWeeks: z.coerce.number().int().positive().optional(),
+  servicesNeeded: z.string().optional(),
 });
 
 export async function updateBuyerProfileAction(formData: FormData) {
@@ -102,6 +106,10 @@ export async function updateBuyerProfileAction(formData: FormData) {
     budgetMax: formData.get("budgetMax"),
     ticketNote: formData.get("ticketNote") || undefined,
     company: formData.get("company") || undefined,
+    requiresBanking: formData.get("requiresBanking") === "on" ? "true" : "false",
+    requiresPassporting: formData.get("requiresPassporting") === "on" ? "true" : "false",
+    timelineWeeks: formData.get("timelineWeeks") || undefined,
+    servicesNeeded: formData.get("servicesNeeded") || undefined,
   });
 
   if (!parsed.success) {
@@ -120,6 +128,10 @@ export async function updateBuyerProfileAction(formData: FormData) {
     budgetMin: parsed.data.budgetMin,
     budgetMax: parsed.data.budgetMax,
     ticketNote: parsed.data.ticketNote || null,
+    requiresBanking: parsed.data.requiresBanking === "true",
+    requiresPassporting: parsed.data.requiresPassporting === "true",
+    timelineWeeks: parsed.data.timelineWeeks ?? null,
+    servicesNeeded: parsed.data.servicesNeeded || "",
   });
 
   revalidatePath("/buyer");
@@ -163,13 +175,21 @@ const assetSchema = z.object({
   description: z.string().min(40),
   category: z.string().min(2),
   jurisdiction: z.string().min(2),
-  licenseType: z.string().optional(),
+  licenseType: z.string().min(2),
   askingPrice: z.coerce.number().int().positive(),
   annualRevenue: z.coerce.number().int().optional(),
   employees: z.coerce.number().int().optional(),
   dealReadiness: z.enum(["EXPLORING", "READY", "URGENT"]),
   tags: z.string().optional(),
   status: z.enum(["DRAFT", "PUBLISHED"]),
+  bankingStatus: z.enum(["NONE", "IN_PROGRESS", "ACTIVE"]),
+  entityType: z.enum(["SHELL", "OPERATIONAL", "APPLICATION"]),
+  regulator: z.string().optional(),
+  changeOfControlNotes: z.string().optional(),
+  servicesInScope: z.string().optional(),
+  hasComplianceOfficer: z.boolean(),
+  hasLocalDirector: z.boolean(),
+  hasPassporting: z.boolean(),
 });
 
 export async function createAssetAction(formData: FormData) {
@@ -181,13 +201,21 @@ export async function createAssetAction(formData: FormData) {
     description: String(formData.get("description") || ""),
     category: String(formData.get("category") || ""),
     jurisdiction: String(formData.get("jurisdiction") || ""),
-    licenseType: String(formData.get("licenseType") || "") || undefined,
+    licenseType: String(formData.get("licenseType") || ""),
     askingPrice: formData.get("askingPrice"),
     annualRevenue: formData.get("annualRevenue") || undefined,
     employees: formData.get("employees") || undefined,
     dealReadiness: formData.get("dealReadiness") || "READY",
     tags: String(formData.get("tags") || ""),
     status: formData.get("status") || "PUBLISHED",
+    bankingStatus: String(formData.get("bankingStatus") || "NONE"),
+    entityType: String(formData.get("entityType") || "SHELL"),
+    regulator: String(formData.get("regulator") || "") || undefined,
+    changeOfControlNotes: String(formData.get("changeOfControlNotes") || "") || undefined,
+    servicesInScope: String(formData.get("servicesInScope") || "") || undefined,
+    hasComplianceOfficer: formData.get("hasComplianceOfficer") === "on",
+    hasLocalDirector: formData.get("hasLocalDirector") === "on",
+    hasPassporting: formData.get("hasPassporting") === "on",
   };
 
   const validation = validateAssetDraft({
@@ -197,6 +225,13 @@ export async function createAssetAction(formData: FormData) {
     category: raw.category,
     jurisdiction: raw.jurisdiction,
     askingPrice: Number(raw.askingPrice) || 0,
+    licenseType: raw.licenseType,
+    bankingStatus: raw.bankingStatus as "NONE" | "IN_PROGRESS" | "ACTIVE",
+    entityType: raw.entityType as "SHELL" | "OPERATIONAL" | "APPLICATION",
+    regulator: raw.regulator,
+    changeOfControlNotes: raw.changeOfControlNotes,
+    servicesInScope: raw.servicesInScope,
+    hasComplianceOfficer: raw.hasComplianceOfficer,
   });
 
   if (!validation.ok) {
@@ -215,13 +250,21 @@ export async function createAssetAction(formData: FormData) {
     description: parsed.data.description,
     category: parsed.data.category,
     jurisdiction: parsed.data.jurisdiction,
-    licenseType: parsed.data.licenseType || null,
+    licenseType: parsed.data.licenseType,
     askingPrice: parsed.data.askingPrice,
     annualRevenue: parsed.data.annualRevenue ?? null,
     employees: parsed.data.employees ?? null,
     dealReadiness: parsed.data.dealReadiness,
     tags: parsed.data.tags || parsed.data.category.toLowerCase(),
     status: parsed.data.status,
+    bankingStatus: parsed.data.bankingStatus,
+    entityType: parsed.data.entityType,
+    regulator: parsed.data.regulator || null,
+    changeOfControlNotes: parsed.data.changeOfControlNotes || null,
+    servicesInScope: parsed.data.servicesInScope || "",
+    hasComplianceOfficer: parsed.data.hasComplianceOfficer,
+    hasLocalDirector: parsed.data.hasLocalDirector,
+    hasPassporting: parsed.data.hasPassporting,
   });
 
   revalidatePath("/assets");

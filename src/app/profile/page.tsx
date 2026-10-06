@@ -15,7 +15,7 @@ export default async function ProfilePage() {
     return (
       <PageShell
         title="Buyer profile"
-        subtitle="Describe your acquisition interests so AI matching and seller outreach stay relevant."
+        subtitle="Define your acquisition mandate — banking, passporting, services, and timeline drive Mandate Matcher."
       >
         <BuyerProfileForm
           initial={{
@@ -27,6 +27,10 @@ export default async function ProfilePage() {
             budgetMin: user?.buyerProfile?.budgetMin || 0,
             budgetMax: user?.buyerProfile?.budgetMax || 0,
             ticketNote: user?.buyerProfile?.ticketNote || "",
+            requiresBanking: user?.buyerProfile?.requiresBanking || false,
+            requiresPassporting: user?.buyerProfile?.requiresPassporting || false,
+            timelineWeeks: user?.buyerProfile?.timelineWeeks ?? "",
+            servicesNeeded: user?.buyerProfile?.servicesNeeded || "",
           }}
         />
       </PageShell>

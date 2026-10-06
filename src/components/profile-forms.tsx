@@ -16,6 +16,10 @@ export function BuyerProfileForm({
     budgetMin: number;
     budgetMax: number;
     ticketNote: string;
+    requiresBanking: boolean;
+    requiresPassporting: boolean;
+    timelineWeeks: number | "";
+    servicesNeeded: string;
   };
 }) {
   const [message, setMessage] = useState<string | null>(null);
@@ -31,7 +35,7 @@ export function BuyerProfileForm({
           if (result?.error) setError(result.error);
           else {
             setError(null);
-            setMessage("Profile saved.");
+            setMessage("Mandate saved.");
           }
         });
       }}
@@ -83,12 +87,47 @@ export function BuyerProfileForm({
         </div>
         <Field label="Budget min (EUR)" name="budgetMin" type="number" defaultValue={String(initial.budgetMin)} required />
         <Field label="Budget max (EUR)" name="budgetMax" type="number" defaultValue={String(initial.budgetMax)} required />
+        <Field
+          label="Timeline (weeks)"
+          name="timelineWeeks"
+          type="number"
+          defaultValue={initial.timelineWeeks === "" ? "" : String(initial.timelineWeeks)}
+          placeholder="e.g. 16"
+        />
+        <Field
+          label="Services needed"
+          name="servicesNeeded"
+          defaultValue={initial.servicesNeeded}
+          placeholder="e-money, SEPA, custody…"
+        />
       </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            name="requiresBanking"
+            defaultChecked={initial.requiresBanking}
+            className="size-4 accent-[var(--accent)]"
+          />
+          Require active banking continuity
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            name="requiresPassporting"
+            defaultChecked={initial.requiresPassporting}
+            className="size-4 accent-[var(--accent)]"
+          />
+          Require EEA/UK passporting
+        </label>
+      </div>
+
       <Field label="Ticket note" name="ticketNote" defaultValue={initial.ticketNote} />
       {error ? <p className="text-sm text-[var(--danger)]">{error}</p> : null}
       {message ? <p className="text-sm text-[var(--success)]">{message}</p> : null}
       <button className="btn btn-primary" disabled={pending} type="submit">
-        {pending ? "Saving…" : "Save buyer profile"}
+        {pending ? "Saving…" : "Save acquisition mandate"}
       </button>
     </form>
   );

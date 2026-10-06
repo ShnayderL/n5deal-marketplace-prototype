@@ -42,6 +42,13 @@ export default async function AssetsPage({ searchParams }: { searchParams: Searc
     );
   }
 
+  if (smart?.bankingRequired) {
+    assets = assets.filter((a) => a.bankingStatus === "ACTIVE");
+  }
+  if (smart?.passportingRequired) {
+    assets = assets.filter((a) => a.hasPassporting);
+  }
+
   let enriched = assets.map((asset) => ({
     ...asset,
     matchScore: undefined as number | undefined,
@@ -102,6 +109,8 @@ export default async function AssetsPage({ searchParams }: { searchParams: Searc
               smart.jurisdictions.length ? `jurisdictions ${smart.jurisdictions.join(", ")}` : null,
               smart.minPrice ? `min ${smart.minPrice}` : null,
               smart.maxPrice ? `max ${smart.maxPrice}` : null,
+              smart.bankingRequired ? "active banking" : null,
+              smart.passportingRequired ? "passporting" : null,
             ]
               .filter(Boolean)
               .join(" · ") || "keyword search only"}

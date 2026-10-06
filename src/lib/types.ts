@@ -2,6 +2,8 @@ export type Role = "BUYER" | "SELLER" | "MANAGER";
 export type UserStatus = "ACTIVE" | "SUSPENDED";
 export type AssetStatus = "DRAFT" | "PUBLISHED" | "SUSPENDED" | "SOLD";
 export type DealReadiness = "EXPLORING" | "READY" | "URGENT";
+export type BankingStatus = "NONE" | "IN_PROGRESS" | "ACTIVE";
+export type EntityType = "SHELL" | "OPERATIONAL" | "APPLICATION";
 
 export type User = {
   id: string;
@@ -26,6 +28,11 @@ export type BuyerProfile = {
   budgetMax: number;
   ticketNote: string | null;
   verified: boolean;
+  /** Domain mandate fields */
+  requiresBanking: boolean;
+  requiresPassporting: boolean;
+  timelineWeeks: number | null;
+  servicesNeeded: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -57,6 +64,15 @@ export type Asset = {
   dealReadiness: DealReadiness;
   status: AssetStatus;
   tags: string;
+  /** Domain / KYF fields — competitors win on these signals */
+  bankingStatus: BankingStatus;
+  hasComplianceOfficer: boolean;
+  hasLocalDirector: boolean;
+  hasPassporting: boolean;
+  entityType: EntityType;
+  changeOfControlNotes: string | null;
+  servicesInScope: string;
+  regulator: string | null;
   createdAt: string;
   updatedAt: string;
 };

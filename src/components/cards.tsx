@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { KyfBadge } from "@/components/kyf-panel";
+import { computeKyfReport } from "@/lib/kyf";
 import type { Asset } from "@/lib/types";
 import { listingImage } from "@/lib/images";
 import { formatMoney } from "@/lib/utils";
@@ -15,6 +17,7 @@ type AssetCardProps = {
 
 export function AssetCard({ asset, imageIndex = 0 }: AssetCardProps) {
   const img = listingImage(imageIndex);
+  const kyf = computeKyfReport(asset);
 
   return (
     <Link href={`/assets/${asset.id}`} className="group surface surface-hover flex h-full flex-col overflow-hidden">
@@ -37,12 +40,19 @@ export function AssetCard({ asset, imageIndex = 0 }: AssetCardProps) {
           {asset.licenseType ? <span className="badge">{asset.licenseType}</span> : (
             <span className="invisible badge">—</span>
           )}
+          <KyfBadge score={kyf.score} grade={kyf.grade} />
           {typeof asset.matchScore === "number" ? (
-            <span className="badge badge-warn">{asset.matchScore}% match</span>
+            <span className="badge badge-warn">{asset.matchScore}% mandate</span>
           ) : null}
         </div>
         <h3 className="font-display text-xl font-semibold leading-snug text-[var(--text)]">{asset.title}</h3>
         <p className="mt-2 line-clamp-2 flex-1 text-sm text-[var(--muted)]">{asset.summary}</p>
+        <div className="mt-3 flex flex-wrap gap-1.5 text-[10px] uppercase tracking-wide text-[var(--muted)]">
+          {asset.bankingStatus === "ACTIVE" ? <span>Banking</span> : null}
+          {asset.hasPassporting ? <span>· Passporting</span> : null}
+          {asset.hasComplianceOfficer ? <span>· MLRO</span> : null}
+          <span>· {asset.entityType === "OPERATIONAL" ? "Operational" : asset.entityType === "SHELL" ? "Shell" : "Application"}</span>
+        </div>
         <div className="mt-4 flex items-end justify-between gap-3">
           <div>
             <div className="text-xs uppercase tracking-wide text-[var(--muted)]">Asking</div>
@@ -82,6 +92,8 @@ export function BuyerCard({
       budgetMin: number;
       budgetMax: number;
       verified: boolean;
+      requiresBanking?: boolean;
+      requiresPassporting?: boolean;
     } | null;
   };
   href: string;
@@ -94,6 +106,8 @@ export function BuyerCard({
       <div className="mb-3 flex flex-wrap gap-2">
         {profile?.verified ? <span className="badge badge-accent">Verified</span> : <span className="badge">Unverified</span>}
         {typeof matchScore === "number" ? <span className="badge badge-warn">{matchScore}% fit</span> : null}
+        {profile?.requiresBanking ? <span className="badge">Needs banking</span> : null}
+        {profile?.requiresPassporting ? <span className="badge">Needs passporting</span> : null}
       </div>
       <h3 className="font-display text-xl font-semibold">{buyer.name}</h3>
       <p className="text-sm text-[var(--muted)]">{buyer.company}</p>
