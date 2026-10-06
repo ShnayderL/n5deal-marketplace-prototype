@@ -13,6 +13,7 @@ import {
 import { validateAssetDraft } from "@/lib/ai";
 import { cocProgress, getCocKit } from "@/lib/coc";
 import { nextStage } from "@/lib/deals";
+import { buildShortlist, DEFAULT_SHORTLIST_INPUT } from "@/lib/shortlist";
 import { store, verifyPassword } from "@/lib/store";
 import type { AssetStatus, Role } from "@/lib/types";
 import { joinCsv } from "@/lib/utils";
@@ -392,6 +393,19 @@ export async function saveBuyerInterestsQuick(categories: string[], jurisdiction
   });
   revalidatePath("/buyer");
   revalidatePath("/profile");
+}
+
+export async function instantShortlistAction(formData: FormData) {
+  const budgetMax = Number(formData.get("budgetMax")) || DEFAULT_SHORTLIST_INPUT.budgetMax;
+  const timeline = Number(formData.get("timelineWeeks"));
+  return buildShortlist(store.listAssets({ status: "PUBLISHED" }), {
+    family: String(formData.get("family") || DEFAULT_SHORTLIST_INPUT.family),
+    region: String(formData.get("region") || DEFAULT_SHORTLIST_INPUT.region),
+    budgetMax,
+    requiresBanking: formData.get("requiresBanking") === "on",
+    requiresPassporting: formData.get("requiresPassporting") === "on",
+    timelineWeeks: timeline > 0 ? timeline : null,
+  });
 }
 
 export async function verifyBuyerIdentityAction() {

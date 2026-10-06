@@ -44,20 +44,20 @@ export function SiteHeader({
         <nav className="hidden items-center gap-1 lg:flex">
           {!user ? (
             <>
-              <Link className="nav-link" href="/login?role=buyer">
-                Buyer
-              </Link>
-              <Link className="nav-link" href="/login?role=seller">
-                Seller
-              </Link>
               <Link
                 href="/assets"
                 className={cn("nav-link", isListings && "nav-link-active")}
               >
-                All Listings
+                Licensed entities
               </Link>
-              <Link className="nav-link" href="/assets?category=License">
-                Incorporation License
+              <Link className="nav-link" href="/#how">
+                How it works
+              </Link>
+              <Link className="nav-link" href="/#jurisdictions">
+                Jurisdictions
+              </Link>
+              <Link className="nav-link" href="/login?role=seller">
+                Sell discreetly
               </Link>
             </>
           ) : null}
@@ -75,11 +75,11 @@ export function SiteHeader({
         <div className="flex items-center gap-2">
           {!user ? (
             <>
-              <Link href="/assets" className="btn btn-ghost hidden !px-3 !py-1.5 text-sm sm:inline-flex">
-                Free Valuation
+              <Link href="/login" className="btn btn-ghost hidden !px-3 !py-1.5 text-sm sm:inline-flex">
+                Sign in
               </Link>
-              <Link href="/login" className="btn btn-primary !px-3.5 !py-1.5 text-sm">
-                Start now
+              <Link href="/#shortlist" className="btn btn-primary !px-3.5 !py-1.5 text-sm">
+                Get shortlist
               </Link>
             </>
           ) : (

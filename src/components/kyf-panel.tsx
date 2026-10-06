@@ -70,6 +70,64 @@ export function KyfPanel({ report }: { report: KyfReport }) {
   );
 }
 
+const ringColor: Record<KyfReport["grade"], string> = {
+  A: "#10b981",
+  B: "#14b8a6",
+  C: "#f59e0b",
+  D: "#ef4444",
+};
+
+export function KyfRing({
+  score,
+  grade,
+  size = 56,
+  dark = false,
+}: {
+  score: number;
+  grade: KyfReport["grade"];
+  size?: number;
+  dark?: boolean;
+}) {
+  const stroke = Math.max(4, Math.round(size / 11));
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const offset = c * (1 - Math.min(100, Math.max(0, score)) / 100);
+
+  return (
+    <div className="relative shrink-0" style={{ width: size, height: size }} title={`KYF Deal Readiness ${score}/100`}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke={dark ? "rgba(255,255,255,0.14)" : "rgba(15,23,42,0.08)"}
+          strokeWidth={stroke}
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke={ringColor[grade]}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={offset}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
+        <span className={`font-display font-bold ${dark ? "text-white" : "text-[var(--text)]"}`} style={{ fontSize: size * 0.3 }}>
+          {grade}
+        </span>
+        <span className={dark ? "text-white/60" : "text-[var(--muted)]"} style={{ fontSize: Math.max(9, size * 0.16) }}>
+          {score}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function KyfBadge({ score, grade }: { score: number; grade: KyfReport["grade"] }) {
   return (
     <span className={`badge ${gradeClass[grade]}`}>

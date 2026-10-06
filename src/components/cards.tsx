@@ -1,9 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
-import { KyfBadge } from "@/components/kyf-panel";
+import { Check, Lock, Minus, Timer, X } from "lucide-react";
+import { KyfRing } from "@/components/kyf-panel";
+import { getCocKit } from "@/lib/coc";
+import { jurisdictionCode } from "@/lib/constants";
 import { computeKyfReport } from "@/lib/kyf";
+import { displayTitle } from "@/lib/shortlist";
 import type { Asset } from "@/lib/types";
-import { listingImage } from "@/lib/images";
 import { formatMoney } from "@/lib/utils";
 
 type AssetCardProps = {
@@ -15,58 +17,94 @@ type AssetCardProps = {
   imageIndex?: number;
 };
 
-export function AssetCard({ asset, imageIndex = 0 }: AssetCardProps) {
-  const img = listingImage(imageIndex);
+const ENTITY_LABEL: Record<Asset["entityType"], string> = {
+  OPERATIONAL: "Operational entity",
+  SHELL: "Ready-made entity",
+  APPLICATION: "Licence application vehicle",
+};
+
+type SignalState = "yes" | "partial" | "no";
+
+function Signal({ state, label }: { state: SignalState; label: string }) {
+  const Icon = state === "yes" ? Check : state === "partial" ? Minus : X;
+  const tone =
+    state === "yes"
+      ? "text-[var(--success)]"
+      : state === "partial"
+        ? "text-[var(--warn)]"
+        : "text-[var(--muted)] opacity-60";
+  return (
+    <li className={`flex items-center gap-1.5 ${state === "no" ? "text-[var(--muted)]" : "text-[var(--text)]"}`}>
+      <Icon className={`h-3.5 w-3.5 shrink-0 ${tone}`} strokeWidth={2.5} />
+      {label}
+    </li>
+  );
+}
+
+export function AssetCard({ asset }: AssetCardProps) {
   const kyf = computeKyfReport(asset);
+  const kit = getCocKit(asset.jurisdiction);
+  const banking: SignalState =
+    asset.bankingStatus === "ACTIVE" ? "yes" : asset.bankingStatus === "IN_PROGRESS" ? "partial" : "no";
 
   return (
     <Link href={`/assets/${asset.id}`} className="group surface surface-hover flex h-full flex-col overflow-hidden">
-      <div className="relative h-40 w-full shrink-0 overflow-hidden bg-[var(--bg-soft)]">
-        <Image
-          src={img}
-          alt=""
-          fill
-          className="img-zoom object-cover"
-          sizes="(max-width:768px) 100vw, 33vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent transition-opacity duration-300 group-hover:from-black/60" />
-        <div className="absolute bottom-3 left-3 flex flex-wrap gap-2">
-          <span className="badge badge-accent !border-white/30 !bg-white/90">{asset.category}</span>
-          <span className="badge !border-white/30 !bg-white/90 !text-[var(--text)]">{asset.jurisdiction}</span>
+      <div className="deal-sheet-head flex items-start justify-between gap-3 p-5">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-white/60">
+            <span className="rounded-md bg-white/10 px-1.5 py-0.5 font-mono font-bold tracking-normal text-white">
+              {jurisdictionCode(asset.jurisdiction)}
+            </span>
+            <span className="truncate">{asset.regulator || kit.regulator}</span>
+          </div>
+          <div className="mt-2 truncate font-display text-2xl font-bold text-white">
+            {asset.licenseType || asset.category}
+          </div>
+          <div className="text-xs text-white/55">{ENTITY_LABEL[asset.entityType]}</div>
         </div>
+        <KyfRing score={kyf.score} grade={kyf.grade} size={58} dark />
       </div>
+
       <div className="flex flex-1 flex-col p-5">
-        <div className="mb-2 flex min-h-7 flex-wrap items-center gap-2">
-          {asset.licenseType ? <span className="badge">{asset.licenseType}</span> : (
-            <span className="invisible badge">—</span>
-          )}
-          <KyfBadge score={kyf.score} grade={kyf.grade} />
-          {asset.discreteMode ? <span className="badge">Discrete</span> : null}
+        <div className="mb-2 flex min-h-6 flex-wrap items-center gap-1.5">
+          {asset.discreteMode ? (
+            <span className="badge">
+              <Lock className="h-3 w-3" /> NDA-gated
+            </span>
+          ) : null}
+          {asset.dealReadiness === "URGENT" ? <span className="badge badge-danger">Urgent exit</span> : null}
+          {kyf.grade === "A" ? <span className="badge badge-accent">Deal-ready</span> : null}
           {typeof asset.matchScore === "number" ? (
-            <span className="badge badge-warn">{asset.matchScore}% mandate</span>
+            <span className="badge badge-warn">{asset.matchScore}% mandate fit</span>
           ) : null}
         </div>
-        <h3 className="font-display text-xl font-semibold leading-snug text-[var(--text)]">{asset.title}</h3>
-        <p className="mt-2 line-clamp-2 flex-1 text-sm text-[var(--muted)]">{asset.summary}</p>
-        <div className="mt-3 flex flex-wrap gap-1.5 text-[10px] uppercase tracking-wide text-[var(--muted)]">
-          {asset.bankingStatus === "ACTIVE" ? <span>Banking</span> : null}
-          {asset.hasPassporting ? <span>· Passporting</span> : null}
-          {asset.hasComplianceOfficer ? <span>· MLRO</span> : null}
-          <span>· {asset.entityType === "OPERATIONAL" ? "Operational" : asset.entityType === "SHELL" ? "Shell" : "Application"}</span>
-        </div>
-        <div className="mt-4 flex items-end justify-between gap-3">
+        <h3 className="font-display text-lg font-semibold leading-snug text-[var(--text)]">{displayTitle(asset)}</h3>
+        <p className="mt-1.5 line-clamp-2 text-sm text-[var(--muted)]">
+          {asset.discreteMode ? "Seller identity and full teaser unlock after mutual NDA." : asset.summary}
+        </p>
+
+        <ul className="mt-4 grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs font-medium">
+          <Signal state={banking} label={banking === "partial" ? "Banking in progress" : "Active banking"} />
+          <Signal state={asset.hasComplianceOfficer ? "yes" : "no"} label="MLRO appointed" />
+          <Signal state={asset.hasLocalDirector ? "yes" : "no"} label="Local director" />
+          <Signal state={asset.hasPassporting ? "yes" : "no"} label="EEA/UK passporting" />
+        </ul>
+
+        <div className="min-h-4 flex-1" />
+        <div className="flex items-end justify-between gap-3 border-t border-[var(--border)] pt-4">
           <div>
-            <div className="text-xs uppercase tracking-wide text-[var(--muted)]">Asking</div>
-            <div className="text-lg font-semibold text-[var(--accent-2)]">
+            <div className="text-[11px] uppercase tracking-wide text-[var(--muted)]">Asking price</div>
+            <div className="font-display text-xl font-bold text-[var(--text)]">
               {formatMoney(asset.askingPrice, asset.currency)}
             </div>
           </div>
-          {asset.seller ? (
-            <div className="text-right text-xs text-[var(--muted)]">
-              <div>Seller</div>
-              <div className="font-medium text-[var(--text)]">{asset.seller.company || asset.seller.name}</div>
+          <div className="text-right text-xs text-[var(--muted)]">
+            <div className="inline-flex items-center gap-1 font-semibold text-[var(--text)]">
+              <Timer className="h-3.5 w-3.5 text-[var(--accent-2)]" />
+              CoC ~{kit.typicalWeeks} wks
             </div>
-          ) : null}
+            <div>vs 12–24 mo. fresh licence</div>
+          </div>
         </div>
         {asset.matchReasons?.length ? (
           <p className="mt-3 text-xs text-[var(--muted)]">{asset.matchReasons.slice(0, 2).join(" · ")}</p>

@@ -130,6 +130,10 @@ a {
   color: #ffffff;
 }
 
+.btn-dark:hover {
+  background: #1e293b;
+}
+
 .btn-danger {
   background: rgba(220, 38, 38, 0.08);
   border-color: rgba(220, 38, 38, 0.25);
@@ -141,6 +145,82 @@ a {
   color: #0f172a;
   border: 1px solid #cbd5e1;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-on-dark {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #ffffff;
+}
+
+.btn-on-dark:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Domain visual system — dark "deal desk" surfaces */
+.hero-dark {
+  position: relative;
+  background-color: #0a1222;
+  color: #e2e8f0;
+}
+
+.grid-lines-dark {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 25% 15%, black 15%, transparent 70%);
+}
+
+.deal-sheet-head {
+  background-color: #0b1426;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.seg-pill {
+  display: inline-flex;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  padding: 0.38rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: #ffffff;
+  transition: all 150ms ease;
+}
+
+.peer:checked + .seg-pill {
+  background: var(--nav-pill);
+  border-color: var(--nav-pill);
+  color: #ffffff;
+}
+
+.peer:focus-visible + .seg-pill {
+  box-shadow: 0 0 0 3px var(--glow);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  transition: all 150ms ease;
+}
+
+.chip:hover {
+  border-color: rgba(37, 99, 235, 0.45);
+}
+
+.chip-active {
+  background: var(--nav-pill);
+  border-color: var(--nav-pill);
+  color: #ffffff;
 }
 
 .input,

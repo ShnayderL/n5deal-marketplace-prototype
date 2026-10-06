@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { demoLoginAction, loginAction } from "@/app/actions";
 import { DEMO_ACCOUNTS } from "@/lib/constants";
 
@@ -196,6 +196,7 @@ export function AssetFilters({
   categories,
   jurisdictions,
   initial,
+  preserve,
 }: {
   categories: string[];
   jurisdictions: string[];
@@ -205,14 +206,12 @@ export function AssetFilters({
     jurisdiction?: string;
     smart?: string;
   };
+  preserve?: Record<string, string | undefined>;
 }) {
   const [smart, setSmart] = useState(initial?.smart || "");
-
-  const params = useMemo(() => {
-    const sp = new URLSearchParams();
-    if (smart) sp.set("smart", smart);
-    return sp;
-  }, [smart]);
+  const preserved = Object.entries(preserve || {}).filter(
+    (entry): entry is [string, string] => Boolean(entry[1]),
+  );
 
   return (
     <form className="space-y-4" action="/assets" method="get">
@@ -220,13 +219,16 @@ export function AssetFilters({
         placeholder="Describe the asset you want…"
         onApply={(query) => {
           setSmart(query);
-          const next = new URLSearchParams(params);
+          const next = new URLSearchParams(preserved);
           if (query) next.set("smart", query);
           else next.delete("smart");
           window.location.href = `/assets?${next.toString()}`;
         }}
       />
       {smart ? <input type="hidden" name="smart" value={smart} /> : null}
+      {preserved.map(([k, v]) => (
+        <input key={k} type="hidden" name={k} value={v} />
+      ))}
       <div className="surface grid gap-3 p-4 md:grid-cols-4">
         <div>
           <label className="label" htmlFor="q">

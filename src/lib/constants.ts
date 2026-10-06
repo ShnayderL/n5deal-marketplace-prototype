@@ -31,6 +31,28 @@ export const JURISDICTIONS = [
   "Cayman",
 ] as const;
 
+export const JURISDICTION_CODES: Record<string, string> = {
+  Lithuania: "LT",
+  Estonia: "EE",
+  Cyprus: "CY",
+  Malta: "MT",
+  Singapore: "SG",
+  "Hong Kong": "HK",
+  Dubai: "AE",
+  UAE: "AE",
+  UK: "GB",
+  Germany: "DE",
+  Spain: "ES",
+  Portugal: "PT",
+  Netherlands: "NL",
+  Mauritius: "MU",
+  Cayman: "KY",
+};
+
+export function jurisdictionCode(jurisdiction: string) {
+  return JURISDICTION_CODES[jurisdiction] || jurisdiction.slice(0, 2).toUpperCase();
+}
+
 export const DEMO_ACCOUNTS = [
   {
     email: "buyer@n5deal.demo",
