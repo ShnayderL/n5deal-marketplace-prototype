@@ -28,6 +28,9 @@ const strongAsset: Asset = {
     "Bank of Lithuania CoC notification typically 30–60 days; share deal preferred with clean standing letter.",
   servicesInScope: "e-money,SEPA,merchant acquiring",
   regulator: "Bank of Lithuania",
+  discreteMode: false,
+  exclusivityBuyerId: null,
+  exclusivityUntil: null,
   createdAt: "",
   updatedAt: "",
 };

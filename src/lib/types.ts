@@ -4,6 +4,12 @@ export type AssetStatus = "DRAFT" | "PUBLISHED" | "SUSPENDED" | "SOLD";
 export type DealReadiness = "EXPLORING" | "READY" | "URGENT";
 export type BankingStatus = "NONE" | "IN_PROGRESS" | "ACTIVE";
 export type EntityType = "SHELL" | "OPERATIONAL" | "APPLICATION";
+export type DealStage =
+  | "INTERESTED"
+  | "NDA_SIGNED"
+  | "DATA_ROOM"
+  | "COC_IN_PROGRESS"
+  | "LOI_SENT";
 
 export type User = {
   id: string;
@@ -28,11 +34,14 @@ export type BuyerProfile = {
   budgetMax: number;
   ticketNote: string | null;
   verified: boolean;
-  /** Domain mandate fields */
   requiresBanking: boolean;
   requiresPassporting: boolean;
   timelineWeeks: number | null;
   servicesNeeded: string;
+  /** Trust Gate — Acquire-style serious-buyer signals */
+  identityVerified: boolean;
+  fundsVerified: boolean;
+  verifiedFundsAmount: number | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -64,7 +73,6 @@ export type Asset = {
   dealReadiness: DealReadiness;
   status: AssetStatus;
   tags: string;
-  /** Domain / KYF fields — competitors win on these signals */
   bankingStatus: BankingStatus;
   hasComplianceOfficer: boolean;
   hasLocalDirector: boolean;
@@ -73,6 +81,10 @@ export type Asset = {
   changeOfControlNotes: string | null;
   servicesInScope: string;
   regulator: string | null;
+  /** Hide seller identity & full description until NDA */
+  discreteMode: boolean;
+  exclusivityBuyerId: string | null;
+  exclusivityUntil: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -88,12 +100,27 @@ export type Message = {
   createdAt: string;
 };
 
+/** Buyer↔asset deal workflow (NDA → data room → CoC → LOI) */
+export type DealRoom = {
+  id: string;
+  assetId: string;
+  buyerId: string;
+  sellerId: string;
+  stage: DealStage;
+  ndaSignedAt: string | null;
+  checklistDone: string[];
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type Database = {
   users: User[];
   buyerProfiles: BuyerProfile[];
   sellerProfiles: SellerProfile[];
   assets: Asset[];
   messages: Message[];
+  dealRooms: DealRoom[];
 };
 
 export type UserWithProfiles = User & {

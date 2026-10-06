@@ -114,6 +114,10 @@ export function NewAssetForm() {
         <Check label="Local director" name="hasLocalDirector" defaultChecked />
         <Check label="EEA/UK passporting" name="hasPassporting" />
       </div>
+      <Check
+        label="Discrete mode — hide seller identity & full description until NDA"
+        name="discreteMode"
+      />
 
       <div>
         <label className="label" htmlFor="summary">

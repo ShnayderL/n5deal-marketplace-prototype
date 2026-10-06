@@ -93,6 +93,9 @@ function asAssetForMandate(asset: MatchableAsset): Asset {
     changeOfControlNotes: asset.changeOfControlNotes ?? null,
     servicesInScope: asset.servicesInScope || "",
     regulator: asset.regulator ?? null,
+    discreteMode: false,
+    exclusivityBuyerId: null,
+    exclusivityUntil: null,
     createdAt: "",
     updatedAt: "",
   };

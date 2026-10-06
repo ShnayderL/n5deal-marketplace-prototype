@@ -12,6 +12,8 @@ import type {
   AssetStatus,
   BuyerProfile,
   Database,
+  DealRoom,
+  DealStage,
   Message,
   SellerProfile,
   User,
@@ -20,6 +22,17 @@ import type {
 import { createSeedDatabase } from "./seed-data";
 
 export { hashPassword, verifyPassword };
+
+function normalizeDealStage(value: unknown): DealStage {
+  const allowed: DealStage[] = [
+    "INTERESTED",
+    "NDA_SIGNED",
+    "DATA_ROOM",
+    "COC_IN_PROGRESS",
+    "LOI_SENT",
+  ];
+  return allowed.includes(value as DealStage) ? (value as DealStage) : "INTERESTED";
+}
 
 function normalizeAsset(raw: Partial<Asset> & Pick<Asset, "id" | "sellerId" | "title">): Asset {
   return {
@@ -46,6 +59,9 @@ function normalizeAsset(raw: Partial<Asset> & Pick<Asset, "id" | "sellerId" | "t
     changeOfControlNotes: raw.changeOfControlNotes ?? null,
     servicesInScope: raw.servicesInScope || "",
     regulator: raw.regulator ?? null,
+    discreteMode: Boolean(raw.discreteMode),
+    exclusivityBuyerId: raw.exclusivityBuyerId ?? null,
+    exclusivityUntil: raw.exclusivityUntil ?? null,
     createdAt: raw.createdAt || new Date().toISOString(),
     updatedAt: raw.updatedAt || new Date().toISOString(),
   };
@@ -69,6 +85,24 @@ function normalizeBuyerProfile(
     requiresPassporting: Boolean(raw.requiresPassporting),
     timelineWeeks: raw.timelineWeeks ?? null,
     servicesNeeded: raw.servicesNeeded || "",
+    identityVerified: Boolean(raw.identityVerified),
+    fundsVerified: Boolean(raw.fundsVerified),
+    verifiedFundsAmount: raw.verifiedFundsAmount ?? null,
+    createdAt: raw.createdAt || new Date().toISOString(),
+    updatedAt: raw.updatedAt || new Date().toISOString(),
+  };
+}
+
+function normalizeDealRoom(raw: Partial<DealRoom> & Pick<DealRoom, "id" | "assetId" | "buyerId" | "sellerId">): DealRoom {
+  return {
+    id: raw.id,
+    assetId: raw.assetId,
+    buyerId: raw.buyerId,
+    sellerId: raw.sellerId,
+    stage: normalizeDealStage(raw.stage),
+    ndaSignedAt: raw.ndaSignedAt ?? null,
+    checklistDone: Array.isArray(raw.checklistDone) ? raw.checklistDone : [],
+    notes: raw.notes ?? null,
     createdAt: raw.createdAt || new Date().toISOString(),
     updatedAt: raw.updatedAt || new Date().toISOString(),
   };
@@ -101,6 +135,7 @@ function loadDatabase(): Database {
       ...parsed,
       assets: (parsed.assets || []).map((a) => normalizeAsset(a)),
       buyerProfiles: (parsed.buyerProfiles || []).map((p) => normalizeBuyerProfile(p)),
+      dealRooms: (parsed.dealRooms || []).map((r) => normalizeDealRoom(r)),
     };
     return migrated;
   }
@@ -182,6 +217,7 @@ export const store = {
     data.sellerProfiles = data.sellerProfiles.filter((p) => p.userId !== id);
     data.assets = data.assets.filter((a) => a.sellerId !== id);
     data.messages = data.messages.filter((m) => m.fromUserId !== id && m.toUserId !== id);
+    data.dealRooms = (data.dealRooms || []).filter((r) => r.buyerId !== id && r.sellerId !== id);
     touch();
   },
 
@@ -213,6 +249,9 @@ export const store = {
         requiresPassporting: input.requiresPassporting ?? false,
         timelineWeeks: input.timelineWeeks ?? null,
         servicesNeeded: input.servicesNeeded ?? "",
+        identityVerified: input.identityVerified ?? false,
+        fundsVerified: input.fundsVerified ?? false,
+        verifiedFundsAmount: input.verifiedFundsAmount ?? null,
       });
     }
     touch();
@@ -309,18 +348,95 @@ export const store = {
       changeOfControlNotes: input.changeOfControlNotes,
       servicesInScope: input.servicesInScope,
       regulator: input.regulator,
+      discreteMode: input.discreteMode,
+      exclusivityBuyerId: input.exclusivityBuyerId,
+      exclusivityUntil: input.exclusivityUntil,
     });
     db().assets.unshift(asset);
     touch();
     return hydrateAsset(asset);
   },
 
-  updateAsset(id: string, data: Partial<Pick<Asset, "status" | "title" | "summary">>) {
+  updateAsset(
+    id: string,
+    data: Partial<
+      Pick<
+        Asset,
+        | "status"
+        | "title"
+        | "summary"
+        | "discreteMode"
+        | "exclusivityBuyerId"
+        | "exclusivityUntil"
+      >
+    >,
+  ) {
     const asset = db().assets.find((a) => a.id === id);
     if (!asset) return null;
     Object.assign(asset, data, { updatedAt: now() });
     touch();
     return hydrateAsset(asset);
+  },
+
+  getDealRoom(assetId: string, buyerId: string) {
+    return (
+      (db().dealRooms || [])
+        .map(normalizeDealRoom)
+        .find((r) => r.assetId === assetId && r.buyerId === buyerId) || null
+    );
+  },
+
+  listDealRoomsForAsset(assetId: string) {
+    return (db().dealRooms || [])
+      .filter((r) => r.assetId === assetId)
+      .map(normalizeDealRoom)
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  },
+
+  listDealRoomsForBuyer(buyerId: string) {
+    return (db().dealRooms || [])
+      .filter((r) => r.buyerId === buyerId)
+      .map(normalizeDealRoom)
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  },
+
+  listDealRoomsForSeller(sellerId: string) {
+    return (db().dealRooms || [])
+      .filter((r) => r.sellerId === sellerId)
+      .map(normalizeDealRoom)
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  },
+
+  openDealRoom(input: { assetId: string; buyerId: string; sellerId: string }) {
+    const existing = this.getDealRoom(input.assetId, input.buyerId);
+    if (existing) return existing;
+    const room = normalizeDealRoom({
+      id: randomUUID(),
+      assetId: input.assetId,
+      buyerId: input.buyerId,
+      sellerId: input.sellerId,
+      stage: "INTERESTED",
+      ndaSignedAt: null,
+      checklistDone: [],
+      notes: null,
+      createdAt: now(),
+      updatedAt: now(),
+    });
+    if (!db().dealRooms) db().dealRooms = [];
+    db().dealRooms.unshift(room);
+    touch();
+    return room;
+  },
+
+  updateDealRoom(
+    id: string,
+    data: Partial<Pick<DealRoom, "stage" | "ndaSignedAt" | "checklistDone" | "notes">>,
+  ) {
+    const room = (db().dealRooms || []).find((r) => r.id === id);
+    if (!room) return null;
+    Object.assign(room, data, { updatedAt: now() });
+    touch();
+    return normalizeDealRoom(room);
   },
 
   countUsers(filter?: { role?: User["role"]; status?: UserStatus }) {

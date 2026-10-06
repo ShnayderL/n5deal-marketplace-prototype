@@ -8,6 +8,7 @@ import { IMAGES } from "@/lib/images";
 import { parseSmartQuery, scoreAssetForBuyer } from "@/lib/ai";
 import { getSession } from "@/lib/auth";
 import { CATEGORIES, JURISDICTIONS } from "@/lib/constants";
+import { computeKyfReport } from "@/lib/kyf";
 import { store } from "@/lib/store";
 
 type SearchParams = Promise<{
@@ -65,6 +66,10 @@ export default async function AssetsPage({ searchParams }: { searchParams: Searc
         })
         .sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
     }
+  } else {
+    enriched = [...enriched].sort(
+      (a, b) => computeKyfReport(b).score - computeKyfReport(a).score,
+    );
   }
 
   return (

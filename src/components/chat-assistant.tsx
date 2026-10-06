@@ -6,14 +6,14 @@ import { useState } from "react";
 import { IMAGES } from "@/lib/images";
 
 const QUICK_REPLIES = [
+  "What is Trust Gate?",
+  "How does the Deal Room work?",
   "What is KYF Deal Readiness?",
-  "How does Mandate Matcher work?",
-  "Help me contact a seller",
 ];
 
 const REPLY_MAP: Record<string, string> = {
   default:
-    "I'm Maya, your N5Deal AI expert. Ask me about KYF Deal Readiness, Mandate Matcher, Smart Asset ID, or how to start a deal conversation.",
+    "I'm Maya, your N5Deal AI expert. Ask about Trust Gate, Deal Room (NDA→CoC→LOI), KYF, Mandate Matcher, or discrete listings.",
   kyf: "KYF Deal Readiness scores each listing on banking continuity, compliance roles, passporting, entity type, and change-of-control notes — signals buyers use before NDA. Open any asset to see the full breakdown.",
   mandate:
     "Mandate Matcher ranks assets against your buyer profile: category, jurisdiction, budget, required banking/passporting, and services overlap. Edit your mandate under Profile, then check the Buyer dashboard.",
@@ -21,18 +21,23 @@ const REPLY_MAP: Record<string, string> = {
     "Smart Asset ID validation blocks thin listings — sellers must declare license type, banking status, and entity type. CoC notes and regulator improve the KYF grade.",
   emi: "Filter assets by category EMI or try smart search: “EMI in Lithuania with banking under €3m”. KYF badges show deal readiness on each card.",
   verification:
-    "Verified buyers have a completed mandate profile. Sellers prioritize serious acquisition interest with banking/passporting requirements filled in.",
+    "Trust Gate: verify identity, then verify acquisition funds on Profile. Sellers see a Serious buyer badge and prioritize your Deal Room over unverified tire-kickers.",
+  dealRoom:
+    "On an asset page: Register interest → Sign NDA (unlocks discrete details) → complete the jurisdiction CoC checklist → Advance to LOI. Sellers can grant 14-day exclusivity from inbound rooms.",
   contact:
-    "Sign in as a Buyer, open a listing, and use the Contact form. Your message appears in Messages for both parties.",
+    "Sign in as a Buyer, open a listing, unlock via NDA if discrete, then use the Contact form. Messages appear in both inboxes.",
 };
 
 function replyFor(text: string) {
   const lower = text.toLowerCase();
+  if (lower.includes("trust") || lower.includes("funds") || lower.includes("verif")) return REPLY_MAP.verification;
+  if (lower.includes("nda") || lower.includes("deal room") || lower.includes("coc") || lower.includes("loi")) {
+    return REPLY_MAP.dealRoom;
+  }
   if (lower.includes("kyf") || lower.includes("readiness")) return REPLY_MAP.kyf;
   if (lower.includes("mandate") || lower.includes("match")) return REPLY_MAP.mandate;
   if (lower.includes("asset id") || lower.includes("publish") || lower.includes("validat")) return REPLY_MAP.assetId;
-  if (lower.includes("emi") || lower.includes("listing")) return REPLY_MAP.emi;
-  if (lower.includes("verif")) return REPLY_MAP.verification;
+  if (lower.includes("emi") || lower.includes("listing") || lower.includes("discrete")) return REPLY_MAP.emi;
   if (lower.includes("contact") || lower.includes("seller")) return REPLY_MAP.contact;
   return REPLY_MAP.default;
 }

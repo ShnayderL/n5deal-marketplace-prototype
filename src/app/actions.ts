@@ -11,6 +11,8 @@ import {
   setSessionCookie,
 } from "@/lib/auth";
 import { validateAssetDraft } from "@/lib/ai";
+import { cocProgress, getCocKit } from "@/lib/coc";
+import { nextStage } from "@/lib/deals";
 import { store, verifyPassword } from "@/lib/store";
 import type { AssetStatus, Role } from "@/lib/types";
 import { joinCsv } from "@/lib/utils";
@@ -120,6 +122,7 @@ export async function updateBuyerProfileAction(formData: FormData) {
   }
 
   store.updateUser(session.id, { company: parsed.data.company || session.company });
+  const existing = store.getUserById(session.id)?.buyerProfile;
   store.upsertBuyerProfile(session.id, {
     headline: parsed.data.headline,
     interests: parsed.data.interests,
@@ -132,6 +135,9 @@ export async function updateBuyerProfileAction(formData: FormData) {
     requiresPassporting: parsed.data.requiresPassporting === "true",
     timelineWeeks: parsed.data.timelineWeeks ?? null,
     servicesNeeded: parsed.data.servicesNeeded || "",
+    identityVerified: existing?.identityVerified ?? false,
+    fundsVerified: existing?.fundsVerified ?? false,
+    verifiedFundsAmount: existing?.verifiedFundsAmount ?? null,
   });
 
   revalidatePath("/buyer");
@@ -190,6 +196,7 @@ const assetSchema = z.object({
   hasComplianceOfficer: z.boolean(),
   hasLocalDirector: z.boolean(),
   hasPassporting: z.boolean(),
+  discreteMode: z.boolean(),
 });
 
 export async function createAssetAction(formData: FormData) {
@@ -216,6 +223,7 @@ export async function createAssetAction(formData: FormData) {
     hasComplianceOfficer: formData.get("hasComplianceOfficer") === "on",
     hasLocalDirector: formData.get("hasLocalDirector") === "on",
     hasPassporting: formData.get("hasPassporting") === "on",
+    discreteMode: formData.get("discreteMode") === "on",
   };
 
   const validation = validateAssetDraft({
@@ -265,6 +273,9 @@ export async function createAssetAction(formData: FormData) {
     hasComplianceOfficer: parsed.data.hasComplianceOfficer,
     hasLocalDirector: parsed.data.hasLocalDirector,
     hasPassporting: parsed.data.hasPassporting,
+    discreteMode: parsed.data.discreteMode,
+    exclusivityBuyerId: null,
+    exclusivityUntil: null,
   });
 
   revalidatePath("/assets");
@@ -381,4 +392,164 @@ export async function saveBuyerInterestsQuick(categories: string[], jurisdiction
   });
   revalidatePath("/buyer");
   revalidatePath("/profile");
+}
+
+export async function verifyBuyerIdentityAction() {
+  const session = await requireSession(["BUYER"]);
+  const user = store.getUserById(session.id);
+  if (!user?.buyerProfile) return { error: "Complete your mandate profile first." };
+  store.upsertBuyerProfile(session.id, {
+    ...user.buyerProfile,
+    identityVerified: true,
+    verified: true,
+  });
+  revalidatePath("/profile");
+  revalidatePath("/buyer");
+  revalidatePath("/assets");
+  return { success: true };
+}
+
+export async function verifyBuyerFundsAction(formData: FormData) {
+  const session = await requireSession(["BUYER"]);
+  const user = store.getUserById(session.id);
+  if (!user?.buyerProfile) return { error: "Complete your mandate profile first." };
+  if (!user.buyerProfile.identityVerified) {
+    return { error: "Verify identity before verifying funds." };
+  }
+  const amount = Number(formData.get("verifiedFundsAmount") || 0);
+  if (!amount || amount < 100000) {
+    return { error: "Verified funds should be at least €100,000." };
+  }
+  store.upsertBuyerProfile(session.id, {
+    ...user.buyerProfile,
+    fundsVerified: true,
+    verifiedFundsAmount: amount,
+  });
+  revalidatePath("/profile");
+  revalidatePath("/buyer");
+  revalidatePath("/assets");
+  return { success: true };
+}
+
+export async function openDealInterestAction(assetId: string) {
+  const session = await requireSession(["BUYER"]);
+  const asset = store.getAsset(assetId);
+  if (!asset || asset.status !== "PUBLISHED") return { error: "Asset unavailable." };
+  store.openDealRoom({ assetId, buyerId: session.id, sellerId: asset.sellerId });
+  revalidatePath(`/assets/${assetId}`);
+  revalidatePath("/buyer");
+  revalidatePath("/seller");
+  return { success: true };
+}
+
+export async function signNdaAction(assetId: string) {
+  const session = await requireSession(["BUYER"]);
+  const asset = store.getAsset(assetId);
+  if (!asset) return { error: "Asset not found." };
+  const buyer = store.getUserById(session.id);
+  if (!buyer?.buyerProfile?.identityVerified) {
+    return { error: "Verify your identity in Profile before signing an NDA." };
+  }
+  let room = store.getDealRoom(assetId, session.id);
+  if (!room) {
+    room = store.openDealRoom({ assetId, buyerId: session.id, sellerId: asset.sellerId });
+  }
+  store.updateDealRoom(room.id, {
+    stage: "NDA_SIGNED",
+    ndaSignedAt: new Date().toISOString(),
+  });
+  store.createMessage({
+    fromUserId: session.id,
+    toUserId: asset.sellerId,
+    assetId,
+    subject: `NDA signed — ${asset.title}`,
+    body: `${session.name} signed the mutual NDA and requested data-room access. Trust: ${buyer.buyerProfile.fundsVerified ? "funds verified" : "funds pending"}.`,
+  });
+  revalidatePath(`/assets/${assetId}`);
+  revalidatePath("/messages");
+  revalidatePath("/seller");
+  return { success: true };
+}
+
+export async function advanceDealStageAction(assetId: string) {
+  const session = await requireSession(["BUYER"]);
+  const asset = store.getAsset(assetId);
+  if (!asset) return { error: "Asset not found." };
+
+  const room = store.getDealRoom(assetId, session.id);
+  if (!room) return { error: "Open interest first." };
+  const next = nextStage(room.stage);
+  if (!next) return { error: "Already at LOI stage." };
+  if (next === "NDA_SIGNED") return { error: "Use Sign NDA action." };
+  if (next === "LOI_SENT") {
+    const progress = cocProgress(getCocKit(asset.jurisdiction), room.checklistDone);
+    if (!progress.readyForLoi) {
+      return { error: "Complete all critical CoC checklist items before LOI." };
+    }
+  }
+  store.updateDealRoom(room.id, { stage: next });
+  if (next === "LOI_SENT") {
+    store.createMessage({
+      fromUserId: session.id,
+      toUserId: asset.sellerId,
+      assetId,
+      subject: `LOI intent — ${asset.title}`,
+      body: `${session.name} marked LOI stage after completing critical CoC checklist items.`,
+    });
+  }
+  revalidatePath(`/assets/${assetId}`);
+  revalidatePath("/buyer");
+  revalidatePath("/messages");
+  return { success: true };
+}
+
+export async function toggleCocChecklistAction(assetId: string, itemKey: string) {
+  const session = await requireSession(["BUYER"]);
+  const asset = store.getAsset(assetId);
+  if (!asset) return { error: "Asset not found." };
+  const room = store.getDealRoom(assetId, session.id);
+  if (!room || !room.ndaSignedAt) return { error: "Sign NDA to unlock the CoC kit." };
+
+  const done = new Set(room.checklistDone);
+  if (done.has(itemKey)) done.delete(itemKey);
+  else done.add(itemKey);
+  const checklistDone = [...done];
+
+  let stage = room.stage;
+  if (stage === "NDA_SIGNED" || stage === "DATA_ROOM") {
+    stage = "COC_IN_PROGRESS";
+  }
+
+  store.updateDealRoom(room.id, { checklistDone, stage });
+  revalidatePath(`/assets/${assetId}`);
+  return { success: true };
+}
+
+export async function setAssetDiscreteModeAction(assetId: string, discreteMode: boolean) {
+  const session = await requireSession(["SELLER"]);
+  const asset = store.getAsset(assetId);
+  if (!asset || asset.sellerId !== session.id) return { error: "Forbidden" };
+  store.updateAsset(assetId, { discreteMode });
+  revalidatePath(`/assets/${assetId}`);
+  revalidatePath("/seller");
+  return { success: true };
+}
+
+export async function grantExclusivityAction(assetId: string, buyerId: string, days = 14) {
+  const session = await requireSession(["SELLER"]);
+  const asset = store.getAsset(assetId);
+  if (!asset || asset.sellerId !== session.id) return { error: "Forbidden" };
+  const until = new Date(Date.now() + days * 86400000).toISOString();
+  store.updateAsset(assetId, { exclusivityBuyerId: buyerId, exclusivityUntil: until });
+  store.createMessage({
+    fromUserId: session.id,
+    toUserId: buyerId,
+    assetId,
+    subject: `Exclusivity granted — ${asset.title}`,
+    body: `You have exclusive negotiation rights until ${until.slice(0, 10)}.`,
+  });
+  revalidatePath(`/assets/${assetId}`);
+  revalidatePath("/seller");
+  revalidatePath("/messages");
+  return { success: true };
 }

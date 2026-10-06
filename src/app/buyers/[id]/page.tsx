@@ -32,6 +32,13 @@ export default async function BuyerDetailPage({ params }: { params: Params }) {
         <div className="surface space-y-4 p-6">
           <div className="flex flex-wrap gap-2">
             {profile?.verified ? <span className="badge badge-accent">Verified</span> : <span className="badge">Unverified</span>}
+            {profile?.identityVerified && profile?.fundsVerified ? (
+              <span className="badge badge-accent">Serious buyer</span>
+            ) : null}
+            {profile?.identityVerified ? <span className="badge">ID verified</span> : null}
+            {profile?.fundsVerified ? (
+              <span className="badge">Funds {formatMoney(profile.verifiedFundsAmount || 0)}</span>
+            ) : null}
             <span className="badge">{buyer.status}</span>
           </div>
           <h2 className="font-display text-2xl font-semibold">{profile?.headline || "No headline yet"}</h2>
@@ -42,6 +49,10 @@ export default async function BuyerDetailPage({ params }: { params: Params }) {
               <Info label="Note" value={profile.ticketNote || "—"} />
               <Info label="Categories" value={splitCsv(profile.preferredCategories).join(", ")} />
               <Info label="Jurisdictions" value={splitCsv(profile.preferredJurisdictions).join(", ")} />
+              <Info label="Requires banking" value={profile.requiresBanking ? "Yes" : "No"} />
+              <Info label="Requires passporting" value={profile.requiresPassporting ? "Yes" : "No"} />
+              <Info label="Services needed" value={profile.servicesNeeded || "—"} />
+              <Info label="Timeline" value={profile.timelineWeeks ? `${profile.timelineWeeks} weeks` : "—"} />
             </div>
           ) : null}
         </div>
@@ -60,7 +71,7 @@ export default async function BuyerDetailPage({ params }: { params: Params }) {
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-[var(--border)] bg-black/10 p-4">
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] p-4">
       <div className="text-xs uppercase tracking-wide text-[var(--muted)]">{label}</div>
       <div className="mt-1 text-sm font-medium">{value}</div>
     </div>

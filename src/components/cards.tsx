@@ -41,6 +41,7 @@ export function AssetCard({ asset, imageIndex = 0 }: AssetCardProps) {
             <span className="invisible badge">—</span>
           )}
           <KyfBadge score={kyf.score} grade={kyf.grade} />
+          {asset.discreteMode ? <span className="badge">Discrete</span> : null}
           {typeof asset.matchScore === "number" ? (
             <span className="badge badge-warn">{asset.matchScore}% mandate</span>
           ) : null}
@@ -94,6 +95,9 @@ export function BuyerCard({
       verified: boolean;
       requiresBanking?: boolean;
       requiresPassporting?: boolean;
+      identityVerified?: boolean;
+      fundsVerified?: boolean;
+      verifiedFundsAmount?: number | null;
     } | null;
   };
   href: string;
@@ -101,10 +105,12 @@ export function BuyerCard({
   matchReasons?: string[];
 }) {
   const profile = buyer.buyerProfile;
+  const serious = Boolean(profile?.identityVerified && profile?.fundsVerified);
   return (
     <Link href={href} className="surface surface-hover block p-5">
       <div className="mb-3 flex flex-wrap gap-2">
         {profile?.verified ? <span className="badge badge-accent">Verified</span> : <span className="badge">Unverified</span>}
+        {serious ? <span className="badge badge-accent">Serious buyer</span> : null}
         {typeof matchScore === "number" ? <span className="badge badge-warn">{matchScore}% fit</span> : null}
         {profile?.requiresBanking ? <span className="badge">Needs banking</span> : null}
         {profile?.requiresPassporting ? <span className="badge">Needs passporting</span> : null}
